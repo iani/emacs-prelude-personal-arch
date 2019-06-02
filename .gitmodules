@@ -1,0 +1,15 @@
+[submodule "packages/sclang"]
+	path = packages/sclang
+	url = https://github.com/iani/sclang.git
+[submodule "packages/sc-snippets"]
+	path = packages/sc-snippets
+	url = https://github.com/iani/sc-snippets.git
+[submodule "packages/org-notes"]
+	path = packages/org-notes
+	url = https://github.com/iani/org-notes.git
+[submodule "packages/org-pm2"]
+	path = packages/org-pm2
+	url = https://github.com/iani/org-pm2.git
+[submodule "packages/org-export-recipes"]
+	path = packages/org-export-recipes
+	url = git@github.com:iani/org-export-recipes.git

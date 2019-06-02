@@ -1,0 +1,282 @@
+* export babel blocks
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 20
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  ;;; Commentary:
+  ;;; org-el-untangle:
+  ;;; import muliple el files from one folder into one org mode file.
+  ;;; org-el-tangle-sections
+  ;;; export each sections' emacs-lisp block to a separate file.
+
+  ;;; Code:
+
+  (defun org-el-export-all-sections ()
+    "Export each sections' emacs-lisp block to a separate file.
+  Add header and footer parts required by flycheck."
+    (interactive)
+    (let
+        ((index 0)
+         (root-dir (file-name-directory (buffer-file-name)))
+         buffers)
+      ;;; First delete old entries, before creating new ones.
+      ;;; Prevent duplicate entries due to renumbering.
+      (mapc 'delete-file (file-expand-wildcards (concat root-dir "*.el")))
+      (org-map-entries 'org-el-export-1-section)
+      (message "Export of %d emacs-lisp blocks finished!" index)
+      ))
+
+  (defun org-el-export-1-section ()
+    "Export this sections' emacs-lisp block to a separate file.
+  Add header and footer parts required by flycheck.
+  Skip sections marked with COMMENT."
+    (let* (body-element
+           (element (cadr (org-element-at-point)))
+           (title (plist-get element :title))
+           (commented (plist-get element :commentedp))
+           (filename))
+      ;; skip commented sections
+      (unless commented
+        (setq index (+ 1 index))
+        (search-forward "#+BEGIN_SRC")
+        (setq body-element (cadr (org-element-at-point)))
+        (setq title (replace-regexp-in-string " " "_" title))
+        (setq filename (format "%03d_%s.el" index title))
+        (with-temp-buffer
+          (insert (format ";;; %s --- %s"
+                          title
+                          (format-time-string "%F %r\n")))
+          (goto-char (point-max))
+          (insert (plist-get body-element :value))
+          (goto-char (point-max))
+          (insert (format "(provide '%s)\n;;; %s ends here" title filename))
+          (write-file filename)))))
+
+  (eval-after-load 'org
+    '(progn
+       ;; Note: This keybinding is in analogy to the default keybinding:
+       ;; C-c . -> org-time-stamp
+       (define-key org-mode-map (kbd "C-c C-M-e") 'org-el-export-all-sections)))
+#+END_SRC
+
+* packages moe powerline multiterm
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 0
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  ;;; Commentary:
+  ;;; this is only some of the packages.
+  ;;; Some other required packages are loaded in the following postload files.
+  ;;; using prelude-require-package ensures that the packges are loaded
+  ;;; at the time required, if necessary.
+
+  ;;; Code:
+
+  ;; include all package repositories needed
+  (setq package-archives
+        '(("melpa" . "https://melpa.org/packages/")
+          ("gnu" . "https://elpa.gnu.org/packages/")
+          ("org" . "http://orgmode.org/elpa/")))
+  (package-initialize)
+
+  (require 'prelude-packages)
+
+  (prelude-require-packages
+   '(
+     moe-theme
+     powerline
+     multi-term))
+
+#+END_SRC
+
+* corfu coordinates and european date
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  (setq calendar-latitude [39 37 north])
+  (setq calendar-longitude [19 54 east])
+  (setq calendar-date-style 'european)
+#+END_SRC
+
+* moe theme powerline faces
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 2
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  ;;; Commentary:
+  ;;; moe-theme
+
+  ;;; Code:
+  (prelude-require-package 'moe-theme)
+  (setq powerline-moe-theme t)
+  ;; (moe-dark)
+
+  (prelude-require-package 'powerline)
+  (powerline-default-theme)
+  (custom-set-faces
+   '(info-title-3 ((t (:inherit info-title-4 :foreground "white" :height 1.2))))
+   '(info-title-4 ((t (:inherit info-title-4 :foreground "red"))))
+   '(font-lock-variable-name-face ((t
+                                    (:foreground "turquoise2"))))
+   '(font-lock-comment-delimiter-face ((t
+                              (:slant italic :foreground "SeaGreen1"))))
+   '(font-lock-comment-face ((t
+                              (:slant italic :foreground "coral1"))))
+   '(mode-line ((t (
+                    :background "midnight blue"
+                                :foreground "tomato"
+                                :box (:line-width 1 :color "turquoise3")
+                                :weight light :height 100 :family "Ubuntu"))))
+   '(aw-leading-char-face ((t
+                          (:weight bold :foreground "white" :background "red" :inherit
+                                   (aw-mode-line-face))))))
+#+END_SRC
+* cursor
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 5
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  ;;; Commentary:
+  ;;; basic theming, cursor style.
+
+  ;;; Code:
+
+  (setq cursor-type 'bar)   ;; show cursor as thin vertical bar.
+  (blink-cursor-mode 1)     ;; turn on cursor blinking
+
+  (setq visible-bell nil)   ;; instead of ringing a bell ...
+  (setq ring-bell-function (lambda () ;; .. invert the mode line colors for 1 second
+                             (invert-face 'mode-line)
+                             (run-with-timer 1 nil 'invert-face 'mode-line)))
+
+  (set-cursor-color "tomato")
+#+END_SRC
+* parenthesis-colors
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 7
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(rainbow-delimiters-depth-1-face ((t (:foreground "#CCFFCC"))))
+   '(rainbow-delimiters-depth-2-face ((t (:foreground "#33FF66"))))
+   '(rainbow-delimiters-depth-3-face ((t (:foreground "#009933"))))
+   '(rainbow-delimiters-depth-4-face ((t (:foreground "#3366FF"))))
+   '(rainbow-delimiters-depth-5-face ((t (:foreground "#77BBFF"))))
+   '(rainbow-delimiters-depth-6-face ((t (:foreground "#FFAACC"))))
+   '(rainbow-delimiters-depth-7-face ((t (:foreground "gold1"))))
+   '(rainbow-delimiters-depth-8-face ((t (:foreground "orange"))))
+   '(rainbow-delimiters-depth-9-face ((t (:foreground "red")))))
+#+END_SRC
+
+* load-some-useful-package-avy-jump-etc
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 8
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  (prelude-require-packages '(avy-zap avy-menu auto-async-byte-compile anzu ace-window ace-popup-menu ace-isearch))
+#+END_SRC
+
+* windmove keybindings function arrow
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<home>") 'windmove-left)
+  (global-set-key (kbd "<prior>") 'windmove-up)
+  (global-set-key (kbd "<end>") 'windmove-right)
+  (global-set-key (kbd "<next>") 'windmove-down)
+#+END_SRC
+
+* whitespace and visual line mode
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 10
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  ;;; Commentary:
+  ;;; turn off whitespace and turn on visual line modes,
+  ;;; for these main modes:
+  ;;; js, css, web, html, markdown
+
+  (defun whitespace-off ()
+    "Make turning whitespace mode off a command callable from key."
+    (interactive)
+    (whitespace-mode -1))
+
+  (add-hook 'markdown-mode-hook 'whitespace-off)
+  (add-hook 'css-mode-hook 'whitespace-off)
+  (add-hook 'html-mode-hook 'whitespace-off)
+  (add-hook 'web-mode-hook 'whitespace-off)
+  (add-hook 'js-mode-hook 'whitespace-off)
+  (add-hook 'org-mode-hook 'whitespace-off)
+
+  (add-hook 'markdown-mode-hook 'visual-line-mode)
+  (add-hook 'css-mode-hook 'visual-line-mode)
+  (add-hook 'html-mode-hook 'visual-line-mode)
+  (add-hook 'web-mode-hook 'visual-line-mode)
+  (add-hook 'js-mode-hook 'visual-line-mode)
+  (add-hook 'org-mode-hook 'visual-line-mode)
+#+END_SRC
+
+* turn off auto fill in text mode
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 11
+  :END:
+
+Do not turn on auto-fill mode in text or org-mode or related modes.
+The culprit in the latest version of emacs is file /Resources/lisp/textmodes/text-mode.el.
+
+For more info, see: https://stackoverflow.com/questions/9878623/how-can-i-disable-auto-fill-mode-in-emacs
+
+#+BEGIN_SRC emacs-lisp
+(setq text-mode-hook nil)
+#+END_SRC
+
+
+* multiple-cursors
+  :PROPERTIES:
+  :EXPORT_HUGO_WEIGHT: 12
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+  (prelude-require-packages '(multiple-cursors mc-extras ace-mc))
+
+  ;; ace-mc
+  (global-set-key (kbd "C-c )") 'ace-mc-add-multiple-cursors)
+  (global-set-key (kbd "C-M-)") 'ace-mc-add-single-cursor)
+
+  ;; multiple-cursors
+
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  ;; mc-extras
+
+  (define-key mc/keymap (kbd "C-. C-d") 'mc/remove-current-cursor)
+  (define-key mc/keymap (kbd "C-. d")   'mc/remove-duplicated-cursors)
+
+  (define-key mc/keymap (kbd "C-. C-.") 'mc/freeze-fake-cursors-dwim)
+
+  (define-key mc/keymap (kbd "C-. =")   'mc/compare-chars)
+
+  ;; Emacs 24.4+ comes with rectangle-mark-mode.
+  (define-key rectangle-mark-mode-map (kbd "C-. C-,")
+    'mc/rect-rectangle-to-multiple-cursors)
+
+  (define-key cua--rectangle-keymap   (kbd "C-. C-,")
+    'mc/cua-rectangle-to-multiple-cursors)
+
+  '(mc/cua-rectangle-setup)
+#+END_SRC
+
+* rainbow blocks
+
+#+BEGIN_SRC emacs-lisp
+  (prelude-require-package 'rainbow-blocks)
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-blocks-mode)
+#+END_SRC
