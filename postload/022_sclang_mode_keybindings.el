@@ -1,4 +1,4 @@
-;;; sclang_mode_keybindings --- 2019-06-13 11:00:01 AM
+;;; sclang_mode_keybindings --- 2019-06-16 12:11:37 PM
   ;;; Commentary:
 
   ;; free prefixes and allocation for hydras
@@ -99,4 +99,4 @@
       ;; (key-chord-define sclang-mode-map "\\\\" 'sclang-xgt)
       ))
 (provide 'sclang_mode_keybindings)
-;;; 020_sclang_mode_keybindings.el ends here
+;;; 022_sclang_mode_keybindings.el ends here

@@ -1,4 +1,4 @@
-;;; org_mode_utils_and_key_map --- 2019-06-13 11:00:06 AM
+;;; org_mode_utils_and_key_map --- 2019-06-16 12:11:38 PM
   ;;; Commentary:
 
   ;;; utils and key map
@@ -96,7 +96,8 @@
     ;; It adds some org-mode specific key bindings.
     (eval-after-load 'org
       '(progn
-         (define-key org-mode-map (kbd "H-o") 'hydra-org/body)
+         (define-key org-mode-map (kbd "C-M-S-o") 'hydra-org/body)
+         (define-key org-mode-map (kbd "C-M-S-h") 'hydra-hugo/body)
          ;; alias for org-cycle, more convenient than TAB
          (define-key org-mode-map (kbd "C-M-]") 'org-cycle)
          ;; Use deft to customize org-latex export of current org-mode buffer
@@ -251,4 +252,4 @@
 
     (global-set-key (kbd "C-c C-x t") 'org-insert-current-date)
 (provide 'org_mode_utils_and_key_map)
-;;; 025_org_mode_utils_and_key_map.el ends here
+;;; 029_org_mode_utils_and_key_map.el ends here

@@ -1,4 +1,4 @@
-;;; default_font_size --- 2019-06-13 10:59:45 AM
+;;; default_font_size --- 2019-06-16 12:11:37 PM
   (custom-set-faces
    '(default ((t
                (:inherit nil :stipple nil :background "#3F3F3F" :foreground "#DCDCCC"

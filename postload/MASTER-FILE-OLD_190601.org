@@ -420,7 +420,7 @@ For more info, see: https://stackoverflow.com/questions/9878623/how-can-i-disabl
   (mc/cua-rectangle-setup)
 #+END_SRC
 
-* COMMENT hl-faces
+* COMMENT OBSOLEte hl-faces
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 13
   :END:
@@ -431,7 +431,7 @@ For more info, see: https://stackoverflow.com/questions/9878623/how-can-i-disabl
    '(hl-sexp-face ((t (:background "gray10")))))
 #+END_SRC
 
-* COMMENT prelude-customization
+* COMMENT BUGGY prelude-customization
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 14
   :END:
@@ -497,7 +497,7 @@ Only solution so far is to switch off prelude mode when in org mode.
        map))
 #+END_SRC
 
-* COMMENT helm
+* COMMENT UNTESTED helm
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 15
   :END:
@@ -654,7 +654,7 @@ Adapted from helm-switch-to-buffers."
 (global-set-key (kbd "C-c C-h w") 'helm-browse-workfiles)
 #+END_SRC
 
-* helm-swoop
+* COMMENT OBSOLETE helm-swoop
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 16
   :END:
@@ -665,7 +665,7 @@ Adapted from helm-switch-to-buffers."
   (global-set-key (kbd "C-S-s") 'helm-swoop)
 #+END_SRC
 
-* bookmark extensions
+* OBSOLETE bookmark extensions
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 17
   :END:
@@ -680,7 +680,7 @@ Adapted from helm-switch-to-buffers."
 
 #+END_SRC
 
-* COMMENT desktop
+* COMMENT BUGGY desktop
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 18
   :END:
@@ -2459,7 +2459,7 @@ Incomplete draft.
     ("F" org-latex-find-subtree-template-file "find subtree template file")
     ("q" quit "exit hydra" :exit t))
 
-  (global-set-key (kbd "H-l") 'hydra-latex/body)
+  (global-set-key (kbd "C-M-S-l") 'hydra-latex/body)
 #+END_SRC
 
 * org mode and reference management ebib reftex
@@ -2659,7 +2659,8 @@ Incomplete draft.
     ;;; 018_calfw.el ends here
 #+END_SRC
 
-* org-split-hugo
+* CANCELED org-split-hugo
+  CLOSED: [2019-06-15 Sat 07:37]
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 42
   :END:
@@ -2882,7 +2883,23 @@ See next section.
   :END:
 
 #+BEGIN_SRC emacs-lisp
+  ;;; Commentary:
+
   ;; Functions for ox-hugo.  (11 Aug 2018 11:36)
+
+  ;; This code requires ox-hugo package.
+  ;; Installing: 15 Jun 2019 08:03, what worked:
+  ;; list-packages, then find ox-mdx-deck, and install it from the list.
+  ;; Had to try 2 times.
+
+  ;; This package only makes it easier to use ox-hugo
+
+  ;;; Code:
+
+  (prelude-require-package 'ox-mdx-deck) ;; this makes sure you get ox-hugo
+  (prelude-require-package 'ox-hugo)     ;; ox-hugo is used here (not ox-mdx-deck)
+
+
 
   ;;; use yaml format in export front matter,
   ;;; because most themes use this as default

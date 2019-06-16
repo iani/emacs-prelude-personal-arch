@@ -1,4 +1,4 @@
-;;; org_mode_faces --- 2019-06-13 11:00:05 AM
+;;; org_mode_faces --- 2019-06-16 12:11:37 PM
 (custom-set-faces
    ;; #ef2929
    ;; '(org-priority ((t (:background "#ff5959" :foreground "gray99"))) t)
@@ -23,4 +23,4 @@
    '(org-level-8 ((t (:weight bold :height 1.1))))
    '(org-level-9 ((t (:weight bold :height 1.1)))))
 (provide 'org_mode_faces)
-;;; 024_org_mode_faces.el ends here
+;;; 028_org_mode_faces.el ends here

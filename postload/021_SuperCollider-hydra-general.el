@@ -1,4 +1,4 @@
-;;; SuperCollider-hydra-general --- 2019-06-13 11:00:00 AM
+;;; SuperCollider-hydra-general --- 2019-06-16 12:11:37 PM
   ;; mode-map does not work because it is overwritten by global sclang-mode=map settings
   ;; in a different file here.
   (defhydra hydra-sclang (
@@ -45,4 +45,4 @@
     (interactive)
     (sclang-eval-string "PlayerSnippetList.gui"))
 (provide 'SuperCollider-hydra-general)
-;;; 019_SuperCollider-hydra-general.el ends here
+;;; 021_SuperCollider-hydra-general.el ends here

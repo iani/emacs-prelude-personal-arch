@@ -1,4 +1,4 @@
-;;; multi-term --- 2019-06-13 10:59:55 AM
+;;; multi-term --- 2019-06-16 12:11:37 PM
   ;;; Commentary:
   ;; Rebind control-x meta-m from shell to multi-term
 

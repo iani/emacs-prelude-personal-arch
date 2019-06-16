@@ -1,4 +1,4 @@
-;;; SuperCollider_utils --- 2019-06-13 10:59:57 AM
+;;; SuperCollider_utils --- 2019-06-16 12:11:37 PM
   (prelude-require-packages
    '(
      smartparens
@@ -74,4 +74,4 @@
     (interactive)
     (sclang-eval-string "Class.extensionsGui;"))
 (provide 'SuperCollider_utils)
-;;; 017_SuperCollider_utils.el ends here
+;;; 019_SuperCollider_utils.el ends here

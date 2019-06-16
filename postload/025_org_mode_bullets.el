@@ -1,4 +1,4 @@
-;;; org_mode_bullets --- 2019-06-13 11:00:02 AM
+;;; org_mode_bullets --- 2019-06-16 12:11:37 PM
   ;;; Commentary:
   ;; pretty bullets for org mode sections
 
@@ -11,4 +11,4 @@
           "⦿" "●" "○" "⧁" "⟾" "⤇" "⟹" "⥤" "⟶" "◎" "◆" "◇" "■" "□" "◼" "◻" "⚙"
           ))
 (provide 'org_mode_bullets)
-;;; 021_org_mode_bullets.el ends here
+;;; 025_org_mode_bullets.el ends here

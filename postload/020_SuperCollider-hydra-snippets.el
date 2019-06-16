@@ -1,4 +1,4 @@
-;;; SuperCollider-hydra-snippets --- 2019-06-13 10:59:58 AM
+;;; SuperCollider-hydra-snippets --- 2019-06-16 12:11:37 PM
   (prelude-require-package 'hydra)
 
   (defhydra hydra-snippets (
@@ -271,4 +271,4 @@
            (insert "\n//:*"))
           ))
 (provide 'SuperCollider-hydra-snippets)
-;;; 018_SuperCollider-hydra-snippets.el ends here
+;;; 020_SuperCollider-hydra-snippets.el ends here

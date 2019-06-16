@@ -1,4 +1,4 @@
-;;; moe_theme_powerline_faces --- 2019-06-02 01:47:25 PM
+;;; moe_theme_powerline_faces --- 2019-06-16 12:11:37 PM
   ;;; Commentary:
   ;;; moe-theme
 
@@ -22,7 +22,7 @@
                     :background "midnight blue"
                                 :foreground "tomato"
                                 :box (:line-width 1 :color "turquoise3")
-                                :weight light :height 100 :family "Ubuntu"))))
+                                :weight light :height 120 :family "Ubuntu"))))
    '(aw-leading-char-face ((t
                           (:weight bold :foreground "white" :background "red" :inherit
                                    (aw-mode-line-face))))))
