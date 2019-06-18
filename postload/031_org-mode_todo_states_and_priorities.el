@@ -1,4 +1,4 @@
-;;; org-mode_todo_states_and_priorities --- 2019-06-16 12:11:38 PM
+;;; org-mode_todo_states_and_priorities --- 2019-06-18 09:21:36 AM
   ;; Experimental, 29 Sep 2018 04:25
   ;; after https://orgmode.org/manual/Fast-access-to-TODO-states.html#Fast-access-to-TODO-states
 

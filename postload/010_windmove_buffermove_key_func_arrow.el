@@ -1,4 +1,4 @@
-;;; windmove_buffermove_key_func_arrow --- 2019-06-16 12:11:37 PM
+;;; windmove_buffermove_key_func_arrow --- 2019-06-18 09:21:35 AM
    (prelude-require-package 'buffer-move)
    (global-set-key (kbd "<home>") 'windmove-left)
    (global-set-key (kbd "<prior>") 'windmove-up)

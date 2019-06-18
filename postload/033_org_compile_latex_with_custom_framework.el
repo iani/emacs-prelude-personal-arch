@@ -1,4 +1,4 @@
-;;; org_compile_latex_with_custom_framework --- 2019-06-16 12:11:38 PM
+;;; org_compile_latex_with_custom_framework --- 2019-06-18 09:21:37 AM
   ;;; Commentary:
 
   ;; 28 Feb 2019 14:18 ff

@@ -1,4 +1,4 @@
-;;; org_mode_jump_to_heading --- 2019-06-16 12:11:37 PM
+;;; org_mode_jump_to_heading --- 2019-06-18 09:21:36 AM
   ;;; Commentary:
 
   ;; these settins are needed to use C-c C-j org-goto

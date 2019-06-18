@@ -2124,9 +2124,9 @@ Distinguish between 2 extents of export:
     (org-set-property "EXPORT_FILE_NAME" filename))
 
   (defun org-hugo-set-post-directory (directory)
-    "Set property HUGO_SECTION in current section."
+    "Set property EXPORT_HUGO_SECTION in current section."
     (interactive "sSection: ")
-    (org-set-property "HUGO_SECTION" directory))
+    (org-set-property "EXPORT_HUGO_SECTION" directory))
 
   ;;; prepare hugo export
   (defun org-export-hugo ()
@@ -2141,6 +2141,24 @@ Distinguish between 2 extents of export:
 
   (defun org-hugo-set-export-path-if-needed ()
     "If absent, set value of HUGO_BASE_DIR property in current buffer."
+    (interactive)
+    (let ((hugo-base-dir-property "HUGO_BASE_DIR"))
+      (save-excursion
+        (org-with-wide-buffer
+         (goto-char (point-min))
+         (let ((new-line "")
+               (here (re-search-forward
+                      (concat "^"
+                              (regexp-quote (concat "#+" hugo-base-dir-property ":"))
+                              " ?") nil t)))
+           (unless here
+             (setq new-line "\n")
+             (goto-char (point-min))
+             (insert "#+" hugo-base-dir-property ": " "~/hugo-exports\n")
+             (message "I set %s" hugo-base-dir-property)))))))
+
+  (defun org-hugo-set-export-path ()
+    "Set value of HUGO_BASE_DIR property in current buffer."
     (interactive)
     (let ((hugo-base-dir-property "HUGO_BASE_DIR"))
       (save-excursion

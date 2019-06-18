@@ -1,4 +1,4 @@
-;;; cursor --- 2019-06-16 12:11:37 PM
+;;; cursor --- 2019-06-18 09:21:35 AM
   ;;; Commentary:
   ;;; basic theming, cursor style.
 

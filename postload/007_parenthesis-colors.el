@@ -1,4 +1,4 @@
-;;; parenthesis-colors --- 2019-06-16 12:11:37 PM
+;;; parenthesis-colors --- 2019-06-18 09:21:35 AM
   (custom-set-faces
    '(rainbow-delimiters-depth-1-face ((t (:foreground "#CCFFCC"))))
    '(rainbow-delimiters-depth-2-face ((t (:foreground "#33FF66"))))
