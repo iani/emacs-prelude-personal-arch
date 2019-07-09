@@ -1,4 +1,4 @@
-;;; moe_theme_powerline_faces --- 2019-06-18 09:21:35 AM
+;;; moe_theme_powerline_faces --- 2019-06-29 08:08:20 AM
   ;;; Commentary:
   ;;; moe-theme
 

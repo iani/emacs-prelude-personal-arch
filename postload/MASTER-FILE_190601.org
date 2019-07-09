@@ -1,5 +1,7 @@
 #+HUGO_BASE_DIR: ~/hugo-export-tests
+#+SITE_TARGET_SUBDIR: tests/hugo/site1
 #+TITLE: Test Only
+
 
 * export babel blocks
   :PROPERTIES:
@@ -1271,6 +1273,12 @@ See:
     (global-set-key (kbd "C-c C-x t") 'org-insert-current-date)
 #+END_SRC
 
+* calendar
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c c C-c") 'calendar)
+#+END_SRC
+
 * org journal
   :PROPERTIES:
   :EXPORT_HUGO_WEIGHT: 29
@@ -1950,6 +1958,148 @@ See:
 
 From: https://ox-hugo.scripter.co/
 
+** COMMENT Recommended export strategy
+
+- do not set a title globally
+- set the EXPORT_FILE_NAME in at least one section, to export it
+- set the HUGO_BASE_DIR property globally.
+  One possible configuration is to store the source org-mode file 
+  in a subfolder inside the hugo site and to set HUGO_BASE_DIR to ../
+  This will make ox-hugo export the md files to the contents
+  subfolder inside the hugo site.
+- Use the command H A Export all "What I Mean", to export 
+  all sections with EXPORT_FILE_NAME to the contents folder.
+
+** COMMENT After exporting: Rendering to local server for testing
+
+Use =hugo -b ...= to render the site with paths fitting to the url which you want to use.
+A single =hugo= command can render directly from the contents directory to the target folder.  The right base url must be specified. The relevant command arguments are documented in https://gohugo.io/commands/hugo/ and are:
+
+#+BEGIN_QUOTE
+  -b, --baseURL string         hostname (and path) to the root, e.g. http://spf13.com/
+  -c, --contentDir string      filesystem path to content directory
+  -d, --destination string     filesystem path to write files to
+#+END_QUOTE
+
+Use command =hugo-render= to construct the 3 parameters baseURL, contentDir and and destination string and execute the hugo command with them.
+
+Here design notes for this command: 
+
+*** COMMENT hugo-render
+
+Use command hugo-render to render the md files from the contents folder to the local webserver site folder using the =hugo= shell command. 
+Here is an example tested successfully on 21 Jun 2019 11:07:
+
+: hugo -b http://localhost/tests/test1/ -c ./content -d /usr/share/nginx/html/tests/test1/
+
+Following second test confirms that the -c (content directory) path can be given in full (tested 21 Jun 2019 11:11)
+
+: hugo -b http://localhost/tests/test2/ -c /home/iani/Dev/SITES/learn1/content -d /usr/share/nginx/html/tests/test2/
+
+NOTE: The above did not work with =start-process= or with babel shell or even with multi-term terminal.  Hugo fails to finde any short codes for unknown reason. When removing short codes, it does not find the template for HTML and does not produce an index page. Possibly the environment is different. 
+
+Therefore we try copying to clipboard, so that it can be pasted as a command in an external terminal, which works.
+
+#+BEGIN_SRC emacs-lisp
+(kill-new "Again: Hello World")
+#+END_SRC
+
+#+RESULTS:
+: Again: Hello World
+
+**** Failed tests
+
+ Did not work with =start-process hugo=, therefore testing babel shell:
+
+ #+BEGIN_SRC shell
+ hugo -b http://localhost/tests/test2/ -c /home/iani/Dev/SITES/learn1/content -d /usr/share/nginx/html/tests/test2/
+ #+END_SRC
+
+ #+RESULTS:
+
+ The lisp code to execute the hugo shell command may be:
+
+ #+BEGIN_SRC elisp
+  (start-process "hugo"
+                 (get-buffer-create "*hugo*")
+                 "/usr/bin/hugo"
+                 "-b"
+                 "http://localhost/tests/test3/"
+                 "-c"
+                 "/home/iani/Dev/SITES/learn1/content"
+                 "-d"
+                 "/usr/share/nginx/html/tests/test3/"
+   )
+#+END_SRC
+
+Steps for implementing hugo-render:
+
+- assume that the site is rendered in folder =public=.
+- assume that source org-mode buffer from which the command =hugo-render-and-copy= command is being executed is located in a subfolder of the folder containing =public=, at the same level as =public=.  I.e. the folder tree looks like this:
+
+#+BEGIN_EXAMPLE
+[-] /home/iani/Dev/SITES/learn1/
+ |-[+] .git
+ |-[+] archetypes
+ |-[+] content
+ |-[+] data
+ |-[+] layouts
+ |-[+] public ;; THIS IS WHERE THE .md FILES ARE EXPORTED
+ |-[+] resources
+ |-[-] source
+ |  `- source.org ;; THIS IS THE SOURCE FILE FOR THE SITE
+ |-[+] static
+ |-[+] themes
+ |- .gitmodules
+ `- config.toml
+#+END_EXAMPLE
+
+- get the path of the folder containing =public=.  Use the relative path stored in =HUGO_BASE_DIR= for this.  I.e. use the following algorithm to get the directory path of the folder that should be copied to the local host site directory:
+- expand the relative file name given in =HUGO_BASE_DIR= to the full path:
+
+#+BEGIN_SRC emacs-lisp
+(expand-file-name "../")
+#+END_SRC
+
+#+RESULTS:
+: /home/iani/Dev/EMACS/emacs-prelude-personal-arch/
+
+  - append the render target directory to the absolute path obtained:
+
+#+BEGIN_SRC emacs-lisp
+(concat (expand-file-name "../") "public")
+#+END_SRC
+
+#+RESULTS:
+: /home/iani/Dev/EMACS/emacs-prelude-personal-arch/public
+
+  - Store in =rendered-site-dir= the path of the target folder where the rendered site (public) should be copied:
+    - Concatenate custom variable =local-server-base-path= with file property =SITE_TARGET_SUBDIR=.
+    - Note: the default value for =local-server-base-path= for nginx on my arch linux laptop is: =/usr/share/nginx/html/=.
+      To this one may add subfolders for exporting several sites to separate locations.
+      e.g. If =SITE_TARGET_SUBDIR= is =tests/hugo/test1=, then =rendered-site-dir= is:
+      =/usr/share/nginx/html/tests/hugo/test1=.
+  - Store in =local-site-url= the url of the local site, to be used for rendering the site with 
+    the command: =hugo -b <local-site-url>=. 
+      The url for rendering and accessing any of these sites is obtained by:
+      =(concat "http://localhost/" site_target_subdir)=. 
+      e.g. If =SITE_TARGET_SUBDIR= is =tests/hugo/test1=, then the url is: 
+      =http://localhost/tests/hugo/test1=.  So the command for rendering the site should be:
+      =hugo -b http://localhost/tests/hugo/test1=
+
+**** New variables needed
+
+The following variables are needed to implement the algorithm above:
+
+|-----+------------------------+-----------------+----------------------------+----------------------------------------------|
+| NUM | NAME                   | TYPE            | VALUE/DEFAULT              | PURPOSE                                      |
+|-----+------------------------+-----------------+----------------------------+----------------------------------------------|
+| #1  | local-server-base-path | custom variable | /usr/share/nginx/html/     | part of rendered-site-dir                    |
+| #2  | SITE_TARGET_SUBDIR     | file property   | -                          | part of rendered-site-dir and local-site-url |
+| #3  | rendered-site-dir      | computed value  | concat #1 #2               | copy published site here                     |
+| #4  | local-site-url         | computed value  | concat http://localhost $2 | baseUrl parameter for hugo render command    |
+|-----+------------------------+-----------------+----------------------------+----------------------------------------------|
+
 ** COMMENT Available export strategies in ox-hugo
    :PROPERTIES:
    :EXPORT_HUGO_WEIGHT: 34
@@ -2032,7 +2182,7 @@ Distinguish between 2 extents of export:
   ;;; Code:
 
   ;; Availability of these 2 packages on melpa is not guaranteed
-  ;; on the first try.  You may have to try several times
+  ;; on first try.  You may have to try several times
   ;; after running list-packages, and installing ox-mdx-deck from
   ;; the buffer of list-packages:
   (prelude-require-package 'ox-mdx-deck) ;; this may help to get ox-hugo
@@ -2157,6 +2307,7 @@ Distinguish between 2 extents of export:
              (insert "#+" hugo-base-dir-property ": " "~/hugo-exports\n")
              (message "I set %s" hugo-base-dir-property)))))))
 
+  ;;; INCOMPLETE
   (defun org-hugo-set-export-path ()
     "Set value of HUGO_BASE_DIR property in current buffer."
     (interactive)
@@ -2240,4 +2391,202 @@ Distinguish between 2 extents of export:
        (shell-quote-argument (file-name-directory (directory-file-name pub-dir))))
       (message "Copied %s"
                (shell-quote-argument (file-name-directory (directory-file-name pub-dir))))))
+
+  ;;; further tests. Prepare hugo export + copy of published data to nginx path
+  (defun get-info-for-hugo ()
+    "Experimental: Test how hugo gets info properties."
+    (interactive)
+    (message "The info is: %s" (org-combine-plists
+                                (org-export--get-export-attributes
+                                 'hugo ;; subtreep visible-only
+                                 nil nil
+                                 )
+                                (org-export--get-buffer-attributes)
+                                (org-export-get-environment 'hugo nil ;; subtreep
+                                                            )))
+    (org-export-get-environment 'hugo nil)
+    (org-export--get-buffer-attributes))
+#+END_SRC
+
+* hugo-render-and-copy code
+
+Part of the ox-hugo package: Render the md files produced by ox-hugo and copy them to the directory of tne local web server that serves the corresponding site.
+See comments in section hugo-render-and-copy.
+
+#+BEGIN_SRC emacs-lisp
+  (org-export-define-derived-backend 'hugo 'blackfriday ;hugo < blackfriday < md < html
+    :menu-entry
+    '(?H "Export to Hugo-compatible Markdown"
+         ((?H "Subtree to file"
+              (lambda (a _s v _b)
+                (org-hugo-export-wim-to-md nil a v)))
+          (?h "To file"
+              (lambda (a s v _b)
+                (org-hugo-export-to-md a s v)))
+          (?O "Subtree to file and open"
+              (lambda (a _s v _b)
+                (if a
+                    (org-hugo-export-wim-to-md nil :async v)
+                  (org-open-file (org-hugo-export-wim-to-md nil a v)))))
+          (?o "To file and open"
+              (lambda (a s v _b)
+                (if a (org-hugo-export-to-md t s v)
+                  (org-open-file (org-hugo-export-to-md nil s v)))))
+          (?A "All subtrees to files"
+              (lambda (a _s v _b)
+                (org-hugo-export-wim-to-md :all-subtrees a v)))
+          (?t "To temporary buffer"
+              (lambda (a s v _b)
+                (org-hugo-export-as-md a s v)))))
+  ;;;; translate-alist
+    :translate-alist '((code . org-hugo-kbd-tags-maybe)
+                       (example-block . org-hugo-example-block)
+                       (export-block . org-hugo-export-block)
+                       (export-snippet . org-hugo-export-snippet)
+                       (headline . org-hugo-headline)
+                       (inner-template . org-hugo-inner-template)
+                       (keyword . org-hugo-keyword)
+                       (link . org-hugo-link)
+                       (paragraph . org-hugo-paragraph)
+                       (src-block . org-hugo-src-block)
+                       (special-block . org-hugo-special-block))
+    :filters-alist '((:filter-body . org-hugo-body-filter))
+  ;;;; options-alist
+    ;;                KEY                       KEYWORD                    OPTION  DEFAULT                     BEHAVIOR
+    :options-alist '(;; Variables not setting the front-matter directly
+                     (:with-toc nil "toc" org-hugo-export-with-toc)
+                     (:section-numbers nil "num" org-hugo-export-with-section-numbers)
+                     (:author "AUTHOR" nil user-full-name newline)
+                     (:creator "CREATOR" nil org-hugo-export-creator-string)
+                     (:with-smart-quotes nil "'" nil) ;Don't use smart quotes; that is done automatically by Blackfriday
+                     (:with-special-strings nil "-" nil) ;Don't use special strings for ndash, mdash; that is done automatically by Blackfriday
+                     (:with-sub-superscript nil "^" '{}) ;Require curly braces to be wrapped around text to sub/super-scripted
+                     (:hugo-with-locale "HUGO_WITH_LOCALE" nil nil)
+                     (:hugo-front-matter-format "HUGO_FRONT_MATTER_FORMAT" nil     org-hugo-front-matter-format)
+                     (:hugo-level-offset "HUGO_LEVEL_OFFSET" nil "1")
+                     (:hugo-preserve-filling "HUGO_PRESERVE_FILLING" nil org-hugo-preserve-filling) ;Preserve breaks so that text filling in Markdown matches that of Org
+                     (:hugo-delete-trailing-ws "HUGO_DELETE_TRAILING_WS" nil org-hugo-delete-trailing-ws)
+                     (:hugo-section "HUGO_SECTION" nil org-hugo-section)
+                     (:hugo-bundle "HUGO_BUNDLE" nil nil)
+                     (:hugo-base-dir "HUGO_BASE_DIR" nil nil)
+                     (:site-target-subdir "SITE_TARGET_SUBDIR" nil nil) ;Copy rendered files here
+                     (:hugo-code-fence "HUGO_CODE_FENCE" nil t) ;Prefer to generate triple-backquoted Markdown code blocks by default.
+                     (:hugo-use-code-for-kbd "HUGO_USE_CODE_FOR_KBD" nil org-hugo-use-code-for-kbd)
+                     (:hugo-prefer-hyphen-in-tags "HUGO_PREFER_HYPHEN_IN_TAGS" nil org-hugo-prefer-hyphen-in-tags)
+                     (:hugo-allow-spaces-in-tags "HUGO_ALLOW_SPACES_IN_TAGS" nil org-hugo-allow-spaces-in-tags)
+                     (:hugo-auto-set-lastmod "HUGO_AUTO_SET_LASTMOD" nil org-hugo-auto-set-lastmod)
+                     (:hugo-custom-front-matter "HUGO_CUSTOM_FRONT_MATTER" nil nil space)
+                     (:hugo-blackfriday "HUGO_BLACKFRIDAY" nil nil space)
+                     (:hugo-front-matter-key-replace "HUGO_FRONT_MATTER_KEY_REPLACE" nil nil space)
+                     (:hugo-date-format "HUGO_DATE_FORMAT" nil org-hugo-date-format)
+                     (:hugo-paired-shortcodes "HUGO_PAIRED_SHORTCODES" nil org-hugo-paired-shortcodes space)
+                     (:hugo-pandoc-citations "HUGO_PANDOC_CITATIONS" nil nil)
+                     (:bibliography "BIBLIOGRAPHY" nil nil newline) ;Used in ox-hugo-pandoc-cite
+
+                     ;; Front-matter variables
+                     ;; https://gohugo.io/content-management/front-matter/#front-matter-variables
+                     ;; aliases
+                     (:hugo-aliases "HUGO_ALIASES" nil nil space)
+                     ;; audio
+                     (:hugo-audio "HUGO_AUDIO" nil nil)
+                     ;; date
+                     ;; "date" is parsed from the Org #+date or subtree property EXPORT_HUGO_DATE
+                     (:date "DATE" nil nil)
+                     ;; description
+                     (:description "DESCRIPTION" nil nil)
+                     ;; draft
+                     ;; "draft" value interpreted by the TODO state of a
+                     ;; post as Org subtree gets higher precedence.
+                     (:hugo-draft "HUGO_DRAFT" nil nil)
+                     ;; expiryDate
+                     (:hugo-expirydate "HUGO_EXPIRYDATE" nil nil)
+                     ;; headless (only for Page Bundles - Hugo v0.35+)
+                     (:hugo-headless "HUGO_HEADLESS" nil nil)
+                     ;; images
+                     (:hugo-images "HUGO_IMAGES" nil nil newline)
+                     ;; isCJKLanguage
+                     (:hugo-iscjklanguage "HUGO_ISCJKLANGUAGE" nil nil)
+                     ;; keywords
+                     ;; "keywords" is parsed from the Org #+keywords or
+                     ;; subtree property EXPORT_KEYWORDS.
+                     (:keywords "KEYWORDS" nil nil newline)
+                     ;; layout
+                     (:hugo-layout "HUGO_LAYOUT" nil nil)
+                     ;; lastmod
+                     (:hugo-lastmod "HUGO_LASTMOD" nil nil)
+                     ;; linkTitle
+                     (:hugo-linktitle "HUGO_LINKTITLE" nil nil)
+                     ;; locale (used in Hugo internal templates)
+                     (:hugo-locale "HUGO_LOCALE" nil nil)
+                     ;; markup
+                     (:hugo-markup "HUGO_MARKUP" nil nil) ;default is "md"
+                     ;; menu
+                     (:hugo-menu "HUGO_MENU" nil nil space)
+                     (:hugo-menu-override "HUGO_MENU_OVERRIDE" nil nil space)
+                     ;; outputs
+                     (:hugo-outputs "HUGO_OUTPUTS" nil nil space)
+                     ;; publishDate
+                     (:hugo-publishdate "HUGO_PUBLISHDATE" nil nil)
+                     ;; series
+                     (:hugo-series "HUGO_SERIES" nil nil newline)
+                     ;; slug
+                     (:hugo-slug "HUGO_SLUG" nil nil)
+                     ;; taxomonomies - tags, categories
+                     (:hugo-tags "HUGO_TAGS" nil nil newline)
+                     ;; #+hugo_tags are used to set the post tags in Org
+                     ;; files written for file-based exports.  But for
+                     ;; subtree-based exports, the EXPORT_HUGO_TAGS
+                     ;; property can be used to override inherited tags
+                     ;; and Org-style tags.
+                     (:hugo-categories "HUGO_CATEGORIES" nil nil newline)
+                     ;; #+hugo_categories are used to set the post
+                     ;; categories in Org files written for file-based
+                     ;; exports.  But for subtree-based exports, the
+                     ;; EXPORT_HUGO_CATEGORIES property can be used to
+                     ;; override inherited categories and Org-style
+                     ;; categories (Org-style tags with "@" prefix).
+                     ;; resources
+                     (:hugo-resources "HUGO_RESOURCES" nil nil space)
+                     ;; title
+                     ;; "title" is parsed from the Org #+title or the subtree heading.
+                     ;; type
+                     (:hugo-type "HUGO_TYPE" nil nil)
+                     ;; url
+                     (:hugo-url "HUGO_URL" nil nil)
+                     ;; videos
+                     (:hugo-videos "HUGO_VIDEOS" nil nil newline)
+                     ;; weight
+                     (:hugo-weight "HUGO_WEIGHT" nil nil space)))
+
+  (defcustom local-server-base-path "/usr/share/nginx/html/"
+    "Websites should be published inside this directory.")
+
+  (defun hugo-render ()
+    "Render exported md to html from contents dir to local web server dir.
+  Issue a single command like this:
+  hugo -b <base url> -c <path to md contents dir> -d <path to local website dir>
+  For example:
+  hugo -b http://localhost/tests/test2/ -c /home/iani/Dev/SITES/learn1/content -d /usr/share/nginx/html/tests/test2/ 
+  "
+    (interactive)
+    (let* ((subtreep nil)
+           (visible-only nil)
+           (info
+            (org-combine-plists
+             (org-export--get-export-attributes
+              'hugo subtreep visible-only)
+             (org-export--get-buffer-attributes)
+             (org-export-get-environment 'hugo subtreep)))
+           (export-base-dir
+            (concat
+             (file-name-directory
+              (directory-file-name
+               (file-name-directory (directory-file-name (org-hugo--get-pub-dir info)))))
+             "public/"))
+           (site-target-subdir (or (plist-get info :site-target-subdir) "/"))
+           )
+      (message "export base dir is: %s" ;; (plist-get info :hugo-base-dir)
+               export-base-dir)
+      ;; (message "site-target-dubdir is: %s" (plist-get info :site-target-subdir))
+      ))
 #+END_SRC

@@ -1,4 +1,4 @@
-;;; org_mode_faces --- 2019-06-18 09:21:36 AM
+;;; org_mode_faces --- 2019-06-29 08:08:22 AM
 (custom-set-faces
    ;; #ef2929
    ;; '(org-priority ((t (:background "#ff5959" :foreground "gray99"))) t)

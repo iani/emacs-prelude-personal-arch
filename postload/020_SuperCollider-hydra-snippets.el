@@ -1,4 +1,4 @@
-;;; SuperCollider-hydra-snippets --- 2019-06-18 09:21:36 AM
+;;; SuperCollider-hydra-snippets --- 2019-06-29 08:08:22 AM
   (prelude-require-package 'hydra)
 
   (defhydra hydra-snippets (

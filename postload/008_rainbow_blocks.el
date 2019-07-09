@@ -1,4 +1,4 @@
-;;; rainbow_blocks --- 2019-06-18 09:21:35 AM
+;;; rainbow_blocks --- 2019-06-29 08:08:21 AM
   (prelude-require-package 'rainbow-blocks)
   (add-hook 'emacs-lisp-mode-hook 'rainbow-blocks-mode)
 (provide 'rainbow_blocks)

@@ -1,4 +1,4 @@
-;;; org_mode_bullets --- 2019-06-18 09:21:36 AM
+;;; org_mode_bullets --- 2019-06-29 08:08:22 AM
   ;;; Commentary:
   ;; pretty bullets for org mode sections
 

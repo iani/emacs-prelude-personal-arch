@@ -1,4 +1,4 @@
-;;; ox-hugo --- 2019-06-18 09:21:37 AM
+;;; New_variables_needed --- 2019-06-29 08:08:23 AM
   ;;; Commentary:
 
   ;; Functions for ox-hugo.  (11 Aug 2018 11:36)
@@ -19,7 +19,7 @@
   ;;; Code:
 
   ;; Availability of these 2 packages on melpa is not guaranteed
-  ;; on the first try.  You may have to try several times
+  ;; on first try.  You may have to try several times
   ;; after running list-packages, and installing ox-mdx-deck from
   ;; the buffer of list-packages:
   (prelude-require-package 'ox-mdx-deck) ;; this may help to get ox-hugo
@@ -144,6 +144,7 @@
              (insert "#+" hugo-base-dir-property ": " "~/hugo-exports\n")
              (message "I set %s" hugo-base-dir-property)))))))
 
+  ;;; INCOMPLETE
   (defun org-hugo-set-export-path ()
     "Set value of HUGO_BASE_DIR property in current buffer."
     (interactive)
@@ -227,5 +228,20 @@
        (shell-quote-argument (file-name-directory (directory-file-name pub-dir))))
       (message "Copied %s"
                (shell-quote-argument (file-name-directory (directory-file-name pub-dir))))))
-(provide 'ox-hugo)
-;;; 034_ox-hugo.el ends here
+
+  ;;; further tests. Prepare hugo export + copy of published data to nginx path
+  (defun get-info-for-hugo ()
+    "Experimental: Test how hugo gets info properties."
+    (interactive)
+    (message "The info is: %s" (org-combine-plists
+                                (org-export--get-export-attributes
+                                 'hugo ;; subtreep visible-only
+                                 nil nil
+                                 )
+                                (org-export--get-buffer-attributes)
+                                (org-export-get-environment 'hugo nil ;; subtreep
+                                                            )))
+    (org-export-get-environment 'hugo nil)
+    (org-export--get-buffer-attributes))
+(provide 'New_variables_needed)
+;;; 036_New_variables_needed.el ends here

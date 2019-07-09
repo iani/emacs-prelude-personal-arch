@@ -1,4 +1,4 @@
-;;; sclang --- 2019-06-18 09:21:36 AM
+;;; sclang --- 2019-06-29 08:08:22 AM
   (require 'sclang)
   ;; Global keyboard shortcut for starting sclang
   (global-set-key (kbd "C-c M-s") 'sclang-start)
