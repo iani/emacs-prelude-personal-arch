@@ -13,14 +13,52 @@
    ;;              (outline-2)))))<
    ;; '(org-level-1 ((t (:family "Courier New" :height 1.1 :weight bold))))
    ;; '(org-level-2 ((t (:family "Courier New" :height 1.1 :weight bold))))
-   '(org-level-1 ((t (:weight bold :height 1.7 :family "Source Code Pro"))))
-   '(org-level-2 ((t (:weight bold :height 1.5))))
-   '(org-level-3 ((t (:weight bold :height 1.2))))
-   '(org-level-4 ((t (:weight bold :height 1.1))))
-   '(org-level-5 ((t (:weight bold :height 1.1))))
-   '(org-level-6 ((t (:weight bold :height 1.1))))
-   '(org-level-7 ((t (:weight bold :height 1.1))))
-   '(org-level-8 ((t (:weight bold :height 1.1))))
-   '(org-level-9 ((t (:weight bold :height 1.1)))))
+ '(org-level-1 ;; ((t (:weight bold :height 1.7 :family "Source Code Pro")))
+   ((t
+     (:family "Linux Libertine" :height 1.5 :weight bold
+              ;; :foreground "#DFAF8F"
+              :inherit
+              (default))))
+                 )
+ '(org-level-2 ;; ((t (:weight bold :height 1.5)))
+   ((t
+     (:family "Linux Libertine" :height 1.3 :weight bold
+              :inherit
+              (default))))
+                 )
+ '(org-level-3 ;; ((t (:weight bold :height 1.2)))
+   ((t
+     (:family "Linux Libertine" :height 1.2 :weight bold
+              :inherit
+              (default))))
+                 )
+ '(org-level-4 ;; ((t (:weight bold :height 1.1)))
+   ((t
+     (:family "Linux Libertine" :height 1.1 :weight bold
+              :inherit
+              (default))))
+                 )
+   '(org-level-5 ;; ((t (:weight bold :height 1.1)))
+     ((t
+       (:family "Linux Libertine" :height 1.1 :weight bold
+                :inherit
+                (default)))) )
+   '(org-level-6 ;; ((t (:weight bold :height 1.1)))
+     ((t
+       (:family "Linux Libertine" :height 1.1 :weight bold
+                :inherit
+                (default)))) )
+   '(org-level-7 ;; ((t (:weight bold :height 1.1)))
+     ((t
+       (:family "Linux Libertine" :height 1.1 :weight bold
+                :inherit
+                (default))))  )
+   '(org-level-8 ;; ((t (:weight bold :height 1.1)))
+     ((t
+       (:family "Linux Libertine" :height 1.1 :weight bold
+                :inherit
+                (default)))) )
+   '(org-level-9 ;; ((t (:weight bold :height 1.1)))
+                 )) ;
 (provide 'org_mode_faces)
 ;;; 028_org_mode_faces.el ends here

@@ -22,7 +22,7 @@
   ;; on first try.  You may have to try several times
   ;; after running list-packages, and installing ox-mdx-deck from
   ;; the buffer of list-packages:
-  (prelude-require-package 'ox-mdx-deck) ;; this may help to get ox-hugo
+;;  (prelude-require-package 'ox-mdx-deck) ;; this may help to get ox-hugo
   (prelude-require-package 'ox-hugo)     ;; ox-hugo is used here (not ox-mdx-deck)
 
   ;; explicitly require ox-hugo to add it to the dispatcher menu:

@@ -28,6 +28,8 @@
   ;; midi group:
 
   ;;; Code:
+(setq sclang-show-workspace-on-startup nil)
+
   (eval-after-load 'sclang
     (progn
       ;; these are disabled by sclang-bindings:

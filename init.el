@@ -19,6 +19,16 @@
           (load-file path))
          (file-expand-wildcards "~/.emacs.d/personal/postload/*.el"))
 
+(defvar init-file (buffer-file-name)
+  "remove this variable after testing")
+
+(defun test-load-init ()
+  "remove this function after testing"
+  (interactive)
+  (mapcar (lambda (path)
+            (load-file path))
+          (file-expand-wildcards "~/.emacs.d/personal/postload/*.el")))
+
 ;;; Last load an additional folder including user modifications
 ;;; This folder is ignored by the present git repository.
 ;;; A user may either put the code directly in the folder,
