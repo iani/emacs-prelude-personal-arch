@@ -27,10 +27,9 @@ has already been constructed."
 (global-set-key (kbd "C-c C-S-a") 'org-todo-list-all-keywords-separately)
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "|" "REVIEW(r)" "|" "ACTIVE(a)" "|" "DONE(d@)")
+      '((sequence "TODO(t)" "|" "URGENT(u)" "|" "REVIEW(r)" "|" "ACTIVE(a)" "|" "DONE(d@)")
         (sequence "DAILY(D)" "|" "WEEKLY(W)" "|" "MONTHLY(M)" "|" "YEARLY(Y)" )
         (sequence "MILESTONE(S)" "|" "DEADLINE(L)" )
-        (sequence "|" "URGENT(u)")
         (sequence "|" "DELEGATED(l)")
         (sequence "|" "CANCELED(c)")
         (sequence "|" "POSTPONED(p)")))
