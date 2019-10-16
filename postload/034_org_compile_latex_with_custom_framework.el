@@ -47,6 +47,7 @@
 ;;   (with-current-buffer
 ;;     ))
 
+
   ;;; Code:
 
 ;; First load this package to initialize variables:
@@ -145,6 +146,7 @@
                       )))
     ;; prepare body file containing plain tex body output
     (with-temp-buffer
+      (insert "\\noindent\n")
       (insert latex-output)
       (write-file body-path))
     ;; compile framework and body files into framework.pdf file
