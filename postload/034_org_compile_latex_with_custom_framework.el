@@ -247,7 +247,7 @@
   "Read template path interactively from default folder."
   (let
       ((result
-        (read-file-name "Select template file: " "~/latex-exports/templates" "framework.tex")))
+        (read-file-name "Select template file: " "~/latex-exports/templates/" "framework.tex")))
     (if (file-directory-p result)
         (concat result "framework.tex")
       result)))
