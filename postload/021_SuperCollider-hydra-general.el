@@ -62,5 +62,16 @@
   "Open PlayerSnippetList gui."
   (interactive)
   (sclang-eval-string "PlayerSnippetList.gui"))
+
+(defun sclang-server-meter ()
+  "Open i/o meter for default server."
+  (interactive)
+  (sclang-eval-string "Server.default.meter"))
+
+(defun sclang-current-environment ()
+  "Post currentEnvironment."
+  (interactive)
+  (sclang-eval-string "currentEnvironment.postln"))
+
 (provide 'SuperCollider-hydra-general)
 ;;; 021_SuperCollider-hydra-general.el ends here

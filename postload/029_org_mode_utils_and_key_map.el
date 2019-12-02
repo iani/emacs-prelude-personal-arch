@@ -93,7 +93,7 @@
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; This is run once after loading org for the first time
-;; It adds some org-mode specific key bindings.
+;; Add some org-mode specific key bindings.
 (eval-after-load 'org
   '(progn
      (define-key org-mode-map (kbd "C-M-S-o") 'hydra-org/body)
@@ -104,6 +104,8 @@
      ;; (define-key org-mode-map (kbd "C-c M-r") 'org-deft-latex-recipes)
      ;; Note: This keybinding is in analogy to the default keybinding:
      ;; C-c . -> org-time-stamp
+     (define-key org-mode-map (kbd "M-S-<down>") 'org-shiftmetadown)
+     (define-key org-mode-map (kbd "M-<down>") 'org-metadown)
      (define-key org-mode-map (kbd "C-c C-.") 'org-set-date)
      (define-key org-mode-map (kbd "C-M-{") 'backward-paragraph)
      (define-key org-mode-map (kbd "C-M-}") 'forward-paragraph)
@@ -144,9 +146,11 @@
      (define-key org-mode-map (kbd "M-o") 'crux-smart-open-line)
      (define-key org-mode-map [(control shift return)] 'crux-smart-open-line-above)
      (define-key org-mode-map [(control shift up)]  'move-text-up)
-     (define-key org-mode-map [(control shift down)]  'move-text-down)
+     ;; (define-key org-mode-map [(control shift down)]  'move-text-downa)
      (define-key org-mode-map [(control meta shift up)]  'move-text-up)
-     (define-key org-mode-map [(control meta shift down)]  'move-text-down)
+     ;; GRRRRR! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     ;; (define-key org-mode-map [(control meta shift down)]  'move-text-down)
+     (define-key org-mode-map [(meta shift down)]  'org-shiftmetadown)
      ;;     ;; the following 2 break structure editing with meta-shift-up / down in org mode
      ;;     ;;    (define-key map [(meta shift up)]  'move-text-up)
      ;;     ;;    (define-key map [(meta shift down)]  'move-text-down)

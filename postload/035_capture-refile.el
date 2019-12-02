@@ -8,6 +8,12 @@
         ("j" "Journal" entry (file+datetree org-default-notes-file)
          "* %?\nEntered on %U\n  %i\n  %a")))
 
+(defcustom org-refile-targets
+  '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+     :maxlevel . 1))
+  "File used for project notes.
+Used by org-refile for jumping to project topics." )
+
 (defun org-refile-set-target-level-1 ()
   "Set maxlevel 1"
   (interactive)
@@ -47,7 +53,10 @@
 (defun org-refile-jump-to-target ()
   "Call org-refile with argument to jump to target."
   (interactive)
-  (funcall-interactively 'org-refile '(4)))
+  (let ((org-refile-targets
+         '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+            :maxlevel . 2))))
+    (funcall-interactively 'org-refile '(4))))
 
 (defun org-refile-clear-cache ()
   "Clear org refile cache."
@@ -55,6 +64,14 @@
   (org-refile-cache-clear)
   ;; (funcall-interactively 'org-refile '(64)
   )
+
+(defun org-open-project-summary-file ()
+  "Open project file."
+  (interactive)
+  (let ((org-refile-targets
+         '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+            :maxlevel . 2))))
+    (find-file (caar org-refile-targets))))
 
 (defhydra hydra-org-refile (
                           ;; sclang-mode-map "C-L"
@@ -67,6 +84,7 @@
   ("l" org-refile-goto-last-stored "goto last stored")
   ("p" org-set-agenda-files-project "agenda use project file")
   ("g" org-set-agenda-files-global "agenda use global files")
+  ("o" org-open-project-summary-file "open project file")
   ("1" org-refile-set-target-level-1 "show only level 1")
   ("2" org-refile-set-target-level-2 "show down to level 2")
   ("3" org-refile-set-target-level-3 "show down to level 3")
