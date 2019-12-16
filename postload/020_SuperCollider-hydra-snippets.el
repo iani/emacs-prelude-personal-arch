@@ -16,6 +16,7 @@
   ("u" sclang-transpose-snippet-up "transpose up")
   ("d" sclang-transpose-snippet-down "transpose down")
   ("." sclang-eval-current-snippet "eval")
+  ("t" sclang-eval-current-snippet-with-timer "eval with timer")
   ("[" sclang-eval-previous-snippet "eval prev")
   ("]" sclang-eval-next-snippet "eval next")
   ("e" sclang-extensions-gui "browse classes and methods")
@@ -120,6 +121,13 @@
                  (file-name-sans-extension
                   (file-name-nondirectory (buffer-file-name))))
        snippet) t)))
+
+(defun sclang-eval-current-snippet-with-timer ()
+  "Evaluate current snippet as routine, and start a timer at the beginning."
+  (interactive)
+  (let ((snippet (sclang-get-current-snippet)))
+    (sclang-eval-string
+     (format "{\nTime().reset;\n%s\n}.fork" snippet))))
 
 (defun sclang-goto-next-snippet ()
   "Go to the next snippet."
