@@ -67,6 +67,7 @@
       ;; transpose snippet up               C-M-P
 
       (define-key sclang-mode-map (kbd "M-X") 'sclang-eval-current-snippet)
+      (define-key sclang-mode-map (kbd "C-<return>") 'sclang-eval-current-snippet)
       (define-key sclang-mode-map (kbd "C-M-x") 'sclang-eval-current-snippet)
       (define-key sclang-mode-map (kbd "M-n") 'sclang-goto-next-snippet)
       (define-key sclang-mode-map (kbd "M-p") 'sclang-goto-previous-snippet)
