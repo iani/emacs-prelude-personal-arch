@@ -127,7 +127,7 @@
   (interactive)
   (let ((snippet (sclang-get-current-snippet)))
     (sclang-eval-string
-     (format "{\nTime().reset;\n%s\n}.fork" snippet))))
+     (format "{\nTime().reset.gui;\n%s\n}.fork" snippet))))
 
 (defun sclang-goto-next-snippet ()
   "Go to the next snippet."
