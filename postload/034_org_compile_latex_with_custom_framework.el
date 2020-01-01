@@ -26,9 +26,12 @@
 
 ;; A1: If the export option current subtree is chosen, then:
 ;; A1.1 Get the path stored in property "LATEX_EXPORT_TEMPLATE" in the current subtree
-;; A1.2 If the path is not found in property of A1.1, then get the global property "LATEX_EXPORT_TEMPLATE".
-;; A1.3 If none of the above 1 and 2 are found, then use the default path: ~/latex-exports/templates/00BASIC/framework.tex
-;; A1.4 If the path given is a directory, then append to it "framework.tex".  Else use the path as-is.
+;; A1.2 If the path is not found in property of A1.1,
+;; then get the global property "LATEX_EXPORT_TEMPLATE".
+;; A1.3 If none of the above 1 and 2 are found, then use the default path:
+;; ~/latex-exports/templates/00BASIC/framework.tex
+;; A1.4 If the path given is a directory, then append to it "framework.tex".
+;; Else use the path as-is.
 
 ;; B. How the template is used for compiling.
 
@@ -39,11 +42,14 @@
 ;; Org exports the chosen subtree or the entire buffer as body only, into the file:
 ;; <template>body.tex.
 ;; Then it compiles the file <template>/framework.tex
-;; It uses as output a name chosen interactively from the user, and always adds a date stamp to it.
-;; After compiling, it copies the resulting pdf file into the folder ~/latex-exports/exports/
+;; It uses as output a name chosen interactively from the user,
+;; and always adds a date stamp to it.
+;; After compiling, it copies the resulting pdf file into the folder
+;; ~/latex-exports/exports/
 
 ;; (defun org-insert-latex-headers-from-deft ()
-;;   "Choose latex headers from recipe list using deft, and append them to the currently edited file."
+;;   "Choose latex headers from recipe list using deft,
+;; and append them to the currently edited file."
 ;;   (with-current-buffer
 ;;     ))
 
@@ -226,7 +232,8 @@
   (message "The subtree template path is:\n%s" (org-latex-get-subtree-template-path)))
 
 (defun org-latex-get-subtree-template-path ()
-  "Get path of the latex template file from LATEX_HEADER_PATH property of current subtree."
+  "Get latex template file path from LATEX_HEADER_PATH property of current subtree.
+"
   (save-excursion
     (org-with-wide-buffer
      (goto-char (point-min)))
@@ -247,7 +254,8 @@
   "Read template path interactively from default folder."
   (let
       ((result
-        (read-file-name "Select template file: " "~/latex-exports/templates/" "framework.tex")))
+        (read-file-name "Select template file: " "~/latex-exports/templates/"
+                        "framework.tex")))
     (if (file-directory-p result)
         (concat result "framework.tex")
       result)))

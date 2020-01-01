@@ -80,6 +80,8 @@
       (define-key sclang-mode-map (kbd "C-M-N") 'sclang-transpose-snippet-down)
       (define-key sclang-mode-map (kbd "C-M-P") 'sclang-transpose-snippet-up)
 
+      (define-key sclang-mode-map (kbd "C-M-S-t")
+        'sclang-eval-current-snippet-with-timer)
 
       ;; (define-key sclang-mode-map (kbd "M-C-.") 'sclang-duplicate-current-snippet)
       ;; (define-key sclang-mode-map (kbd "M-n") 'sclang-goto-next-snippet)
