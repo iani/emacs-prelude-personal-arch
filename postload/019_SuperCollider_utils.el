@@ -69,6 +69,26 @@
   (interactive)
   (sclang-eval-string "Server.default.freqscope"))
 
+(defun dired-play-soundfile-in-sclang ()
+  "Play current file under cursor from dired in sclang, from disk."
+  (interactive)
+  (message (dired-get-file-for-visit))
+  (sclang-play-soundfile (dired-get-file-for-visit)))
+
+(defun sclang-play-soundfile (path)
+  (sclang-eval-string
+   (concat "\"" path "\".playAudioFile")))
+
+(define-key dired-mode-map (kbd "C-c C-p") 'dired-play-soundfile-in-sclang)
+
+(defun sclang-stop-soundfile ()
+  "Stop playing soundfile player."
+  (interactive)
+  (sclang-eval-string "\\diskplayback.stop"))
+
+(define-key dired-mode-map (kbd "C-c C-s") 'sclang-stop-soundfile)
+
+
 (defun sclang-extensions-gui ()
   "Open gui for browsing user extensions classes and methods.
     Type return on a selected item to open the file where it is defined."

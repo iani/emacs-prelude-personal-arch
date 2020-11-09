@@ -5,4 +5,5 @@
 (defun unmount-all-external-disks ()
   (interactive)
   (shell-command (concat "echo " (shell-quote-argument (read-passwd "Password? "))
-                         " | sudo -S umount /run/media/iani/*")))
+                         " | sudo -S umount /run/media/iani/*"))
+  (message "Discs ejected. Please check message from OS."))
