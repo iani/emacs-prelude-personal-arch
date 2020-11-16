@@ -93,11 +93,14 @@
 
       (define-key sclang-mode-map (kbd "H-=") 'sclang-insert-snippet-separator+)
       (define-key sclang-mode-map (kbd "H-8") 'sclang-insert-snippet-separator*)
+      (define-key sclang-mode-map (kbd "C-M-=") 'sclang-insert-+>)
+      (define-key sclang-mode-map (kbd "C-M-;") 'sclang-insert-comment-with-date)
 
        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Miscellaneous
       (define-key sclang-mode-map (kbd "C-S-c c") 'sclang-clear-post-buffer)
-
+      (define-key sclang-mode-map (kbd "C-M-=") 'sclang-insert-+>)
+      (define-key sclang-mode-map (kbd "C-\"") 'sclang-insert-comment-with-date)
       (key-chord-define sclang-mode-map "11" 'sclang-2-windows)
       ;; (key-chord-define sclang-mode-map "''" 'sclang-plusgt)
       ;; (key-chord-define sclang-mode-map ";;" 'sclang-ltplus)

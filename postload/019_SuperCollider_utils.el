@@ -64,6 +64,11 @@
   (interactive)
   (sclang-eval-string "Server.default.scope"))
 
+(defun sclang-server-control-scope ()
+  "Open scope for default server at control rate."
+  (interactive)
+  (sclang-eval-string "Server.default.scope(12, rate: \\control)"))
+
 (defun sclang-server-freqscope ()
   "Open frequency scope for default server."
   (interactive)
@@ -88,6 +93,19 @@
 
 (define-key dired-mode-map (kbd "C-c C-s") 'sclang-stop-soundfile)
 
+(defun sclang-insert-+> ()
+  "Insert +>."
+  (interactive)
+  (insert "+> \\"))
+
+(defun sclang-insert-comment-with-date ()
+  "Insert /* datestamp nl */ "
+  (interactive)
+  (insert "/* ")
+  (insert (format-time-string "%e %b %Y %H:%M"))
+  (insert "\n\n*/")
+  (backward-char 3)
+  )
 
 (defun sclang-extensions-gui ()
   "Open gui for browsing user extensions classes and methods.
