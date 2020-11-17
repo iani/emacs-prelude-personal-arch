@@ -59,15 +59,19 @@
   (interactive)
   (sclang-eval-string "Server.default.meter"))
 
-(defun sclang-server-scope ()
+(defun sclang-server-scope (&optional chans)
   "Open scope for default server."
-  (interactive)
-  (sclang-eval-string "Server.default.scope"))
+  (interactive "nHow many channels? ")
+  (sclang-eval-string (format "Server.default.scope(%s, rate: \\audio)" chans))
+  ;; (sclang-eval-string "Server.default.scope")
+  )
 
-(defun sclang-server-control-scope ()
+(defun sclang-server-control-scope (&optional chans)
   "Open scope for default server at control rate."
-  (interactive)
-  (sclang-eval-string "Server.default.scope(12, rate: \\control)"))
+  (interactive "nHow many channels? ")
+  (message "Making control scope with %s channels" chans)
+  (sclang-eval-string (format "Server.default.scope(%s, rate: \\control)" chans))
+  )
 
 (defun sclang-server-freqscope ()
   "Open frequency scope for default server."
