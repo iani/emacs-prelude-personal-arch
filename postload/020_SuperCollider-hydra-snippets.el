@@ -3,12 +3,13 @@
 
 (defhydra hydra-snippets (
                           ;; sclang-mode-map "C-L"
-                          :color red :columns 3)
+                          :color red :columns 4)
   "SC Snippet hydra"
   ("n" sclang-goto-next-snippet "next")
   ("p" sclang-goto-previous-snippet "previous")
   ("N" sclang-goto-next-heading "next heading")
   ("P" sclang-goto-previous-heading "previous heading")
+  ("s" sclang-select-current-snippet-region "select snippet region")
   ("x" sclang-cut-current-snippet "cut")
   ("c" sclang-copy-current-snippet "copy")
   ("2" sclang-duplicate-current-snippet "duplicate")
@@ -56,6 +57,34 @@
         (setq snippet-end (point-max)))
       (concat prefix
               (buffer-substring-no-properties snippet-begin snippet-end)))))
+
+(defun sclang-select-current-snippet-region ()
+  "Select region between //: comments in sclang, as region."
+  (interactive)
+  (save-excursion
+    (goto-char (line-end-position)) ;; fix when starting from point-min
+    (let (
+          (snippet-begin (search-backward-regexp "^//:" nil t))
+          snippet-end
+          snippet
+          snippet-head
+          (prefix ""))
+      (unless snippet-begin
+        (setq snippet-begin (point-min))
+        (setq prefix "//:\n"))
+      (setq sclang-snippet-is-routine nil)
+      (setq sclang-snippet-is-loop nil)
+      (goto-char snippet-begin)
+      (setq snippet-head (buffer-substring-no-properties (point) (+ 4 (point))))
+      (if (equal snippet-head "//:+") (setq sclang-snippet-is-routine t))
+      (if (equal snippet-head "//:*") (setq sclang-snippet-is-loop t))
+      (goto-char (line-end-position))
+      (setq snippet-end (search-forward-regexp "^//:" nil t))
+      (if snippet-end
+          (setq snippet-end (line-beginning-position))
+        (setq snippet-end (point-max)))
+      (set-mark snippet-begin)
+      (goto-char snippet-end))))
 
 (defun sclang-cut-current-snippet ()
   "Return region between //: comments in sclang, as string, and cut it out."

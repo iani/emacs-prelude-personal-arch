@@ -3,7 +3,7 @@
 ;; in a different file here.
 (defhydra hydra-sclang (
                         ;; sclang-mode-map "C-S"
-                        :color red :columns 3)
+                        :color red :columns 4)
   "SC utils hydra"
   ("r" sclang-run-startup-script "run Startup script" :exit t)
   ("k" sclang-kill "kill sc")
