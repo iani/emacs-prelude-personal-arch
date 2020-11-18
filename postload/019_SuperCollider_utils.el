@@ -111,6 +111,15 @@
   (backward-char 3)
   )
 
+(defun sclang-insert-snippet-with-date ()
+  "Insert //: datestamp nl /* */ "
+  (interactive)
+  (insert "//: ")
+  (insert (format-time-string "%e %b %Y %H:%M"))
+
+  (insert "\n/*\n\n*/")
+  (previous-line 2))
+
 (defun sclang-extensions-gui ()
   "Open gui for browsing user extensions classes and methods.
     Type return on a selected item to open the file where it is defined."

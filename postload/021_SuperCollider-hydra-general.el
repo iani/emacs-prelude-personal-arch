@@ -9,6 +9,7 @@
   ("k" sclang-kill "kill sc")
   ("b" sclang-server-boot "boot server")
   ("e" sclang-server-quit "exit (quit) server")
+  ("Q" sclang-stop "stop sclang")
   ("t" sclang-osc-trace-on "osc trace on")
   ("T" sclang-osc-trace-off "osc trace off")
   ("p" sclang-server-plot-tree "server plot nodes")
