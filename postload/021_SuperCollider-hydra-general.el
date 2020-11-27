@@ -6,7 +6,8 @@
                         :color red :columns 4)
   "SC utils hydra"
   ("r" sclang-run-startup-script "run Startup script" :exit t)
-  ("k" sclang-kill "kill sc")
+  ("k" sclang-kill "stop SuperCollider")
+  ("K" sclang-kill-servers "kill all scsynth servers")
   ("b" sclang-server-boot "boot server")
   ("e" sclang-server-quit "exit (quit) server")
   ("Q" sclang-stop "stop sclang")
@@ -29,6 +30,11 @@
   "Run Snippets/Startup.scd via Startup.run."
   (interactive)
   (sclang-eval-string "Startup.run"))
+
+(defun sclang-kill-servers ()
+  "Kill all scsynth servers"
+  (interactive)
+  (sclang-eval-string "Server.killAll"))
 
 (defun sclang-buffer-list ()
   "Show window with list of loaded audio buffers."
