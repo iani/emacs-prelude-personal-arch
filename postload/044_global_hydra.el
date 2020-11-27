@@ -10,6 +10,11 @@
   ("a" helm-projectile-ag "search in project" :exit t)
   ("r" projectile-replace "replace in project" :exit t)
   ("v" magit "magit" :exit t)
-  ("p" projectile-switch-project "switch project" :exit t))
+  ("p" projectile-switch-project "switch project" :exit t)
+  ("i" reload-init-file "reload init file" :exit t)
+  ("q" quit "quit (exit hydra)" :exit t))
 
+;;; more semantic
 (global-set-key (kbd "C-M-S-g") 'hydra-global/body)
+;;; more convenient on keyboard
+(global-set-key (kbd "C-M->") 'hydra-global/body)
