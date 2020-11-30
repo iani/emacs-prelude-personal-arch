@@ -4,8 +4,8 @@
 (defhydra hydra-global (:color blue :columns 4)
   "Global Hydra (mainly projectile+sclang stuff)"
   ("p" helm-projectile-switch-project "switch project" :exit t)
-  ("f" helm-projectile-find-file "find project file" :exit t)
-  ("d" helm-projectile-dired-dir "find project dir" :exit t)
+  ("f" projectile-find-file "find project file" :exit t)
+  ("d" helm-projectile-find-dir "find project dir" :exit t)
   ("D" projectile-dired "dired project root" :exit t)
   ("a" helm-projectile-ag "search in project" :exit t)
   ("r" projectile-replace "replace in project" :exit t)
@@ -18,6 +18,8 @@
   ("c" sclang-recompile "recompile sclang library" :exit t)
   ("S" sclang-start "start sclang" :exit t)
   ("Q" sclang-stop "quit sclang" :exit t)
+  ("F" fit-window-to-buffer "fit window to buffer" :exit t)
+  ("u" unmount-all-external-disks "unmount external disks" :exit t)
   ("q" quit "quit (exit hydra)" :exit t))
 
 ;;; more semantic
