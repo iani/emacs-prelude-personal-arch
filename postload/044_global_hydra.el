@@ -20,9 +20,31 @@
   ("Q" sclang-stop "quit sclang" :exit t)
   ("F" fit-window-to-buffer "fit window to buffer" :exit t)
   ("u" unmount-all-external-disks "unmount external disks" :exit t)
+  ("H" set-input-greek "greek input" :exit t)
+  ("E" set-input-english "english input" :exit t)
+  ("G" set-input-german "german input" :exit t)
   ("q" quit "quit (exit hydra)" :exit t))
 
 ;;; more semantic
 (global-set-key (kbd "C-M-S-g") 'hydra-global/body)
 ;;; more convenient on keyboard
 (global-set-key (kbd "C-M->") 'hydra-global/body)
+
+(defun set-input-greek ()
+  "Activate greek input method"
+  (interactive)
+  (activate-input-method 'greek))
+
+(defun set-input-german ()
+  "Activate german input method"
+  (interactive)
+  (activate-input-method 'german))
+
+(defun set-input-english ()
+  "Activate english input method"
+  (interactive)
+  (activate-input-method 'ucs))
+
+
+(activate-input-method 'ucs)
+(activate-input-method 'german-prefix)
