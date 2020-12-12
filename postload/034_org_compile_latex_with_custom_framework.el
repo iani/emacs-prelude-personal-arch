@@ -183,6 +183,11 @@
   "Compile tex file using latexmk.
   If PDFLATEXP then use pdflatex instead of xelatex.
   Open resulting pdf file with default macos open method."
+  ;; (message "*Async Shell Command*")
+  ;; (message "*Async Shell Command* exists? %s"
+  ;;          (gnus-buffer-exists-p "*Async Shell Command*"))
+  (when (gnus-buffer-exists-p "*Async Shell Command*")
+    (kill-buffer "*Async Shell Command*"))
   (let* ((file (or filename (buffer-file-name)))
          (pdf-file (concat
                     (file-name-sans-extension file)
@@ -348,10 +353,13 @@
   (interactive)
   (find-file (org-latex-get-subtree-template-path)))
 
-  ;;; redoing the fucker
+(defun kill-latex-process-buffer ()
+ "Kill the latex-proces buffer"
+ (interactive)
+ (kill-buffer "*Async Shell Command*"))
+
 (defhydra hydra-latex (:color red :columns 2)
   "latex hydra"
-
   ("x" org-xelatex-compile-buffer "ORG xelatex buffer")
   ("X" org-xelatex-compile-subtree "ORG xelatex subtree")
   ("l" pdflatex-compile-buffer "TEX pdflatex buffer")
@@ -364,6 +372,7 @@
   ("?" org-latex-post-subtree-template-path "post subtree template path")
   ("f" org-latex-find-file-template-file "find file template file")
   ("F" org-latex-find-subtree-template-file "find subtree template file")
+  ("K" kill-latex-process-buffer "kill latex process buffer" :exit t)
   ("q" quit "exit hydra" :exit t))
 
 (global-set-key (kbd "C-M-S-l") 'hydra-latex/body)
