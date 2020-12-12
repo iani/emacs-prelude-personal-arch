@@ -85,7 +85,7 @@
   Concatenate org-latex-export-path with default path.
   Issue error if latex-export folder has not been installed."
   (let ((template-path (concat org-latex-export-path
-                               "/templates/00BasicGreek/framework.tex")))
+                               "/templates/000BASIC/framework.tex")))
     (if (file-exists-p template-path)
         template-path
       (error "You must install latex-templates in your home folder to use this."))))
@@ -165,7 +165,9 @@
     ;; requires epdfview installed in arch linux
     ;; for macos, use "open" instead.
     (shell-command (concat "epdfview " (shell-quote-argument export-file-copy-path) " & "))
-    (message "pdf export file copied to:\n%s" export-file-copy-path)))
+    (message "pdf export file copied to:\n%s" export-file-copy-path)
+
+    ))
 
 (defun xelatex-compile-buffer ()
   "Compile current tex buffer into PDF using xelatex.
@@ -237,8 +239,7 @@
   (message "The subtree template path is:\n%s" (org-latex-get-subtree-template-path)))
 
 (defun org-latex-get-subtree-template-path ()
-  "Get latex template file path from LATEX_HEADER_PATH property of current subtree.
-"
+  "Get latex template file path from LATEX_HEADER_PATH property of current subtree."
   (save-excursion
     (org-with-wide-buffer
      (goto-char (point-min)))
