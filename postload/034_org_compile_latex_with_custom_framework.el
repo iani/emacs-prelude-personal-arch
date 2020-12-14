@@ -164,10 +164,17 @@
     ;; open the copy of the exported file:
     ;; requires epdfview installed in arch linux
     ;; for macos, use "open" instead.
-    (shell-command (concat "epdfview " (shell-quote-argument export-file-copy-path) " & "))
+    (shell-command
+     (concat "epdfview " (shell-quote-argument export-file-copy-path) " & "))
     (message "pdf export file copied to:\n%s" export-file-copy-path)
-
-    ))
+    (message "now trying to copy - experimental")
+    (message "the path is %s" template-path)
+    (let ((target-path (concat (file-name-directory template-path) "history/"
+                                (file-name-base export-file-copy-path) ".tex")))
+      (message "should copy from:%s\n to:\n %s" template-path target-path)
+      (make-directory (file-name-directory target-path) t)
+      (copy-file template-path target-path)
+      (message "done"))))
 
 (defun xelatex-compile-buffer ()
   "Compile current tex buffer into PDF using xelatex.
