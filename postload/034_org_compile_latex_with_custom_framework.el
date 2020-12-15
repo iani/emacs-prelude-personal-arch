@@ -163,7 +163,7 @@
      t)
     ;; open the copy of the exported file:
     ;; requires epdfview installed in arch linux
-    ;; for macos, use "open" instead.
+    ;; for macos, use "open" h.
     (shell-command
      (concat "epdfview " (shell-quote-argument export-file-copy-path) " & "))
     (message "pdf export file copied to:\n%s" export-file-copy-path)
