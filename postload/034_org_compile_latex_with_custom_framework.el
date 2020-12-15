@@ -174,6 +174,10 @@
       (message "should copy from:%s\n to:\n %s" template-path target-path)
       (make-directory (file-name-directory target-path) t)
       (copy-file template-path target-path)
+      ;; save target-path in buffer for future reference
+      (if subtreep
+          (org-latex-set-subtree-template target-path)
+        (org-latex-set-buffer-template target-path))
       (message "done"))))
 
 (defun xelatex-compile-buffer ()
@@ -237,7 +241,8 @@
        (when here
          (goto-char here)
          ;; (message (buffer-substring-no-properties here (line-end-position)))
-         (setq property-value (buffer-substring-no-properties here (line-end-position))))
+         (setq property-value
+               (buffer-substring-no-properties here (line-end-position))))
        property-value))))
 
 (defun org-latex-post-subtree-template-path ()
@@ -256,45 +261,54 @@
           property-value
         (org-latex-get-file-template-path)))))
 
-(defun org-latex-set-subtree-template ()
-  "Set value of LATEX_HEADER_PATH property in current subtree."
+(defun org-latex-set-subtree-template-interactively ()
+  "Read value of LATEX_HEADER_PATH property from user and set it in current subtree."
   (interactive)
   (let ((path (org-latex-read-template-path)))
-    (org-set-property "LATEX_HEADER_PATH" path)
-    (message "You selected: \n%s" path)))
+    (org-latex-set-subtree-template path)))
+
+(defun org-latex-set-subtree-template (path)
+  "Set value of LATEX_HEADER_PATH property in current subtree."
+  (org-set-property "LATEX_HEADER_PATH" path)
+  (message "You selected: \n%s" path))
 
 (defun org-latex-read-template-path ()
   "Read template path interactively from default folder."
   (let
       ((result
-        (read-file-name "Select template file: " "~/latex-exports/templates/"
+        (read-file-name "Select template file: "
+                        "~/latex-exports/templates/000BASIC/history/"
                         "framework.tex")))
     (if (file-directory-p result)
         (concat result "framework.tex")
       result)))
 
-(defun org-latex-set-buffer-template ()
-  "Set value of LATEX_HEADER_PATH property globally in current buffer."
+(defun org-latex-set-buffer-template-interactively ()
+  "Read value of LATEX_HEADER_PATH from user and set it globally in buffer."
   (interactive)
   (let ((path (org-latex-read-template-path)))
-    (save-excursion
-      (org-with-wide-buffer
-       (goto-char (point-min))
-       (let ((new-line "")
-             (here (re-search-forward
-                    (concat "^"
-                            (regexp-quote (concat "#+" "LATEX_HEADER_PATH" ":"))
-                            " ?") nil t)))
-         (cond
-          (here
-           (goto-char here)
-           (beginning-of-line)
-           (kill-line))
-          (t
-           (setq new-line "\n")
-           (goto-char (point-min))))
-         (insert "#+LATEX_HEADER_PATH: " path new-line))))
-    (message "You selected: \n%s" path)))
+    (org-latex-set-buffer-template path)))
+
+(defun org-latex-set-buffer-template (path)
+  "Set value of LATEX_HEADER_PATH property globally in current buffer."
+  (save-excursion
+    (org-with-wide-buffer
+     (goto-char (point-min))
+     (let ((new-line "")
+           (here (re-search-forward
+                  (concat "^"
+                          (regexp-quote (concat "#+" "LATEX_HEADER_PATH" ":"))
+                          " ?") nil t)))
+       (cond
+        (here
+         (goto-char here)
+         (beginning-of-line)
+         (kill-line))
+        (t
+         (setq new-line "\n")
+         (goto-char (point-min))))
+       (insert "#+LATEX_HEADER_PATH: " path new-line))))
+  (message "You selected: \n%s" path))
 
 (defun org-latex-set-buffer-export-name (&optional name)
   "Set value of LATEX_EXPORT_NAME property globally in current buffer."
@@ -374,8 +388,8 @@
   ("L" xelatex-compile-buffer "TEX xelatex buffer")
   ("p" org-pdflatex-compile-buffer "ORG pdflatex buffer")
   ("P" org-pdflatex-compile-subtree "ORG pdflatex subtree")
-  ("t" org-latex-set-buffer-template "set buffer template")
-  ("T" org-latex-set-subtree-template "set subtree template")
+  ("t" org-latex-set-buffer-template-interactively "set buffer template")
+  ("T" org-latex-set-subtree-template-interactively "set subtree template")
   ("/" org-latex-post-file-template-path "post file template path")
   ("?" org-latex-post-subtree-template-path "post subtree template path")
   ("f" org-latex-find-file-template-file "find file template file")

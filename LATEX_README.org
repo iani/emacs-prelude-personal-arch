@@ -1,0 +1,35 @@
+# 15 Dec 2020 09:07
+About org-latex-compile-with-template 
+* Use
+** Main function and hydra keyboard menu interface
+ The function =org-latex-compile-with-template= implements an alternative way to turn an org-mode buffer or subtree into latex and compile it into pdf.  It is part of a collection of functions, which provide utilities for customizing the header and footer parts of the latex file, in order to produce output in different styles and with different options. These functions can be called from a menu provided by a =hydra=.  The hydra (=hydra-latex/body=) is bound to the keyboard shortcut =Control-Meta-Shift-l=. 
+** Pdflatex vs. xelatex
+ =org-latex-compile-with-template= provides choices for compiling with =pdflatex= and =xelatex=.  =XeLaTex= is more suitable for compiling buffers that use custom fonts (not part of the Tex, but installed on your current computer), and for texts written in multiple languages (especially non-latin-character-set languages), using UTF-8. =hydra-latex/body= provides keybindings for choosing whether to use =pdflatex= or =xelatex=.
+
+** Keybindings of =hydra-latex/body=
+*** "x" org-xelatex-compile-buffer "ORG xelatex buffer
+
+Compile entire buffer using xelatex.  Xelatex 
+
+*** "X" org-xelatex-compile-subtree "ORG xelatex subtree
+*** "l" pdflatex-compile-buffer "TEX pdflatex buffer
+*** "L" xelatex-compile-buffer "TEX xelatex buffer
+*** "p" org-pdflatex-compile-buffer "ORG pdflatex buffer
+*** "P" org-pdflatex-compile-subtree "ORG pdflatex subtree
+*** "t" org-latex-set-buffer-template-interactively "set buffer template
+*** "T" org-latex-set-subtree-template-interactively "set subtree template
+*** "/" org-latex-post-file-template-path "post file template path
+*** "?" org-latex-post-subtree-template-path "post subtree template path
+*** "f" org-latex-find-file-template-file "find file template file
+*** "F" org-latex-find-subtree-template-file "find subtree template file
+*** "K" kill-latex-process-buffer "kill latex process buffer" :exit 
+*** "q" quit "exit hydra"
+
+
+
+* How it Works
+
+Instead 
+
+* Variables
+* Functions
