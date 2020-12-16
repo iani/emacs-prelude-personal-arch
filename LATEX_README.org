@@ -5,7 +5,7 @@ About org-latex-compile-with-template
 
 The function =org-latex-compile-with-template= implements an alternative way to turn an org-mode buffer or subtree into latex and compile it into pdf.  It is part of a collection of functions, which provide utilities for customizing the header and footer parts of the latex file, in order to produce output in different styles and with different options. 
 * Pdflatex vs. xelatex
-=org-latex-compile-with-template= provides choices for compiling with =pdflatex= and =xelatex=.  =XeLaTex= is more suitable for compiling buffers that use custom fonts (not part of the Tex, but installed on your current computer), and for texts written in multiple languages (especially non-latin-character-set languages), using UTF-8. The present packages provides provides keybindings for choosing whether to use =pdflatex= or =xelatex=.
+=org-latex-compile-with-template= provides choices for compiling with =pdflatex= and =xelatex=.  =XeLaTex= is more suitable for compiling buffers that use custom fonts (not part of the Tex, but installed on your current computer), and for texts written in multiple languages (especially non-latin-character-set languages, such as Greek, Chinese, Japanese, Korean, etc.), using UTF-8. The present packages provides provides keybindings for choosing whether to use =pdflatex= or =xelatex=.
 
 * hydra keyboard menu interface
 These functions can be called from a menu provided by a =hydra=.  The hydra (=hydra-latex/body=) is bound to the keyboard shortcut =Control-Meta-Shift-l=. The key bindings are: 
@@ -30,36 +30,108 @@ Compile entire buffer using xelatex.  Xelatex
 
 * How it Works
 
-The main function for compiling, =org-latex-compile-with-template=  provides an alternative way to exports the selected buffer or subtree as latex, which gets the header and footer for the latex file from a template file written in =LaTeX= instead of the org-mode options.  Using a template file instead of a writing the org-mode options in emacs-lisp makes it easier to edit and try out headers which contain many options.
+The main function for compiling, =org-latex-compile-with-template=  provides an alternative way to export the current buffer or subtree as latex. This function gets the header and footer for the latex file from a template file written in =LaTeX=. It does not use any header from org-mode options.  Using a template file instead of writing the org-mode options in emacs-lisp makes it easier to edit and try out headers.
 
-** Implementation
+
+
+** Export steps
 
 ***  Step 1: Convert org-mode to latex
    
- This is done by the following function call:
+This is done in function =org-latex-compile-with-template= by the following function call:
 
-  #+begin_src elisp
-  (org-export-as
-  ;; backend subtreep visible-only body-only ext-plist
+#+begin_src elisp
+(org-export-as
+;; backend subtreep visible-only body-only ext-plist
      'latex   subtreep   nil       t         nil)
-  #+end_src
+#+end_src
 
-  The arguments provided to =org-export-as= have the following function:
+The arguments provided to =org-export-as= work as follows:
 
-  - ='latex= signals to output as latex
-  - If =subtreep= is non-nil (=t=), then export only the current subtree.  Else if it is nil, then export the entire buffer.
-  - =visible-only= is set to =nil=, and signals to export the entire contents of the subtree or buffer.  (Parts hidden by the user are also exported).
-  - body-only set to =t=: Export only the org-mode text contents. Do not include header or footer option settings.
-  - ext-plist set to =nil=: No other customization properties are provided.
+- ='latex= signals to output as latex
+- If =subtreep= is non-nil (=t=), then export only the current subtree.  Else if it is nil, then export the entire buffer.
+- =visible-only= is set to =nil=, and signals to export the entire contents of the subtree or buffer.  (Parts hidden by the user are also exported).
+- body-only set to =t=: Export only the org-mode text contents. Do not include header or footer option settings.
+- ext-plist set to =nil=: No other customization properties are provided.
 
 *** Step 2: save latex to file
 
 *** Step 3: get framework file
+**** 3.1 Get path of framework file
+Get path from global property if exporting entire buffer or subtree property if exporting subtree.
+
+**** Copy framework file to =<templatefolder>/framework.tex=
 
 *** Step 4: Compile framework + exported body
 
 *** Step 5: Copy framework as backup
 
+Copy =<templatefolder>/framework.tex= to =<templatefolder>/history/<exportname>.tex= 
+
+<exportname> is 
+
 *** Step 6: Save link to framework backup in org-mode buffer
 
+This is important so that when recompiling the buffer or subtree, the same framework is used.  In this way, corrections to the org-mode can be made at any time later on, and re-exported to pdf while keeping the same latex options defined in the framework.
 
+* Variables
+
+** =org-latex-export-path=
+
+** =org-latex-bib-folder=
+
+** =org-latex-bib-filename=
+
+* Functions
+** =org-latex-bib-full-path=
+
+
+** =org-latex-default-template-path=
+
+** =org-latex-body-path=
+
+** =org-pdflatex-compile-buffer=
+
+** =org-xelatex-compile-buffer=
+
+** =org-latex-compile-with-template=
+
+** =xelatex-compile-buffer=
+
+** =pdflatex-compile-buffer=
+
+** =latex-compile-file-with-latexmk=
+
+** =org-latex-post-file-template-path=
+
+** =org-latex-get-file-template-path=
+
+** =org-latex-get-subtree-template-path=
+
+** =org-latex-set-subtree-template-interactively=
+
+** =org-latex-set-subtree-template=
+
+** =org-latex-read-template-path=
+
+** =org-latex-set-buffer-template-interactively=
+
+** =org-latex-set-buffer-template=
+
+** =org-latex-set-buffer-export-name=
+
+** =org-latex-set-subtree-export-name=
+
+** =org-set-subtree-or-buffer-property=
+
+** =org-get-custom-property=
+
+** =org-latex-find-file-template-file=
+
+** =org-latex-find-subtree-template-file=
+
+
+
+** =kill-latex-process-buffer=
+
+Interactive. Utility for killing the process buffer that displays the pdf preview (=epdfview=).  This closes the pdf preview window and and frees the buffer for then next preview.

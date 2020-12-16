@@ -3,6 +3,10 @@
 
 ;; 28 Feb 2019 14:18 ff
 ;; New version: Using a set framework.tex file
+;; 15 Dec 2020 12:02
+;; Second new version: Use 1 template buffer, save framework files
+;; See documentation in file LATEX_README.org
+
 ;; The framework file is in a folder that may contain all other necessary assets
 ;; e.g. bib or graphics files.
 ;; The org source is exported as body.tex and then imported by the framework file
@@ -167,7 +171,7 @@
     (shell-command
      (concat "epdfview " (shell-quote-argument export-file-copy-path) " & "))
     (message "pdf export file copied to:\n%s" export-file-copy-path)
-    (message "now trying to copy - experimental")
+    (message "now trying to copy TEMPLATE - EXPERIMENTAL")
     (message "the path is %s" template-path)
     (let ((target-path (concat (file-name-directory template-path) "history/"
                                 (file-name-base export-file-copy-path) ".tex")))
