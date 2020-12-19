@@ -114,12 +114,33 @@ Example 1: Getting the default framework path (no framework was specified by the
 #+RESULTS:
 : /home/iani/latex-exports/templates/000BASIC/framework.tex
 
+Example 2: Setting a custom framework for a subtree:
+
+**** subtree with custom framework
+     :PROPERTIES:
+     :DATE:     <2020-12-19 Sat 15:30>
+     :LATEX_HEADER_PATH: /home/iani/latex-exports/templates/000BASIC/history/00verysimple201210_201214.tex
+     :END:
+
+The custom framework path for this subtree was set interactively with function =org-latex-set-subtree-template-interactively=.  After that, the template path was tested like this:
 
 #+begin_src emacs-lisp
-
+(org-latex-get-subtree-template-path)
 #+end_src
 
+#+RESULTS:
+: /home/iani/latex-exports/templates/000BASIC/history/00verysimple201210_201214.tex
+
 **** Copy framework file to =<templatefolder>/framework.tex=
+
+In order to use the selected framework for compiling into pdf, it is necessary to copy that framework into the same folder where the =body.tex= file is to be exported, so that the framework file finds the body file.  Therefore, before compiling to pdf, one must do this: 
+
+Copy the selected framework template file into =(concat template-directory "framework.tex")=. Like this:
+
+#+begin_src emacs-lisp
+(file-copy template-path (concat template-directory "framework.tex"))
+#+end_src
+
 
 *** Step 4: Compile framework + exported body
 
