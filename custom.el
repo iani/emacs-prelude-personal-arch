@@ -4,6 +4,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(bmkp-last-as-first-bookmark-file "~/.emacs.d/savefile/bookmarks")
+ '(custom-safe-themes
+   '("13d20048c12826c7ea636fbe513d6f24c0d43709a761052adbca052708798ce3" default))
  '(package-selected-packages
    '(yasnippet yatemplate org-roam-bibtex org-roam-server org-roam d-mode csv-mode dockerfile-mode org-present cmake-mode yaml-mode higlight-parentheses highlight-parentheses calfw-cal calfw-org calfw org-journal org-bullets ox-mdx-deck ox-hugo hydra ace-mc mc-extras multiple-cursors buffer-move ace-isearch ace-popup-menu auto-async-byte-compile avy-menu avy-zap rainbow-blocks multi-term powerline moe-theme zop-to-char zenburn-theme which-key volatile-highlights undo-tree super-save smex smartrep smartparens rainbow-mode rainbow-delimiters operate-on-number move-text magit lsp-ui key-chord json-mode js2-mode imenu-anywhere ido-completing-read+ hl-todo helm-projectile helm-descbinds helm-ag guru-mode gitignore-mode gitconfig-mode git-timemachine gist geiser flycheck flx-ido expand-region exec-path-from-shell elisp-slime-nav editorconfig easy-kill discover-my-major diminish diff-hl crux counsel company-lsp browse-kill-ring beacon anzu ace-window)))
  ;; (custom-set-faces

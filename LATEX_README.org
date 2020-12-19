@@ -56,11 +56,68 @@ The arguments provided to =org-export-as= work as follows:
 
 *** Step 2: save latex to file
 
-Step 1 converts the selected part of the org-mode buffer to latex. The resulting latex code is saved to file =body.tex= inside the templates directory.
+Step 1 converts the selected part of the org-mode buffer to latex. The resulting latex code is saved to file =body.tex= inside the templates directory.  This directory is obtained by function like this:
+
+#+begin_src elisp
+  (let*
+      ((template-path (if subtreep
+                          (org-latex-get-subtree-template-path)
+                        (org-latex-get-file-template-path)))
+       (template-directory (file-name-directory template-path))
+     ;;; ...
+       (body-path (concat template-directory "body.tex"))))
+#+end_src
+ =org-latex-
+
+**** test: 
+
+#+begin_src emacs-lisp
+(org-latex-get-subtree-template-path)
+#+end_src
+
+#+RESULTS:
+: /home/iani/latex-exports/templates/000BASIC/framework.tex
 
 *** Step 3: get framework file
 **** 3.1 Get path of framework file
-Get path from global property if exporting entire buffer or subtree property if exporting subtree.
+Get path from global property if exporting entire buffer or subtree property if exporting subtree.  The code for this is: 
+
+#+begin_src emacs-lisp
+(if subtreep
+                          (org-latex-get-subtree-template-path)
+                        (org-latex-get-file-template-path))
+#+end_src
+
+
+Example 1: Getting the default framework path (no framework was specified by the user in the buffer).  In this case, both the subtree and file template path point to the same path, as shown here:
+ 
+**** subtree template path
+
+#+begin_src emacs-lisp
+(org-latex-get-subtree-template-path)
+#+end_src
+
+#+RESULTS:
+: /home/iani/latex-exports/templates/000BASIC/framework.tex
+
+
+#+begin_src emacs-lisp
+
+#+end_src
+
+**** file template path
+
+#+begin_src emacs-lisp
+(org-latex-get-file-template-path)
+#+end_src
+
+#+RESULTS:
+: /home/iani/latex-exports/templates/000BASIC/framework.tex
+
+
+#+begin_src emacs-lisp
+
+#+end_src
 
 **** Copy framework file to =<templatefolder>/framework.tex=
 
@@ -111,6 +168,10 @@ The variable =org-latex-export-path=
 ** =org-latex-post-file-template-path=
 
 ** =org-latex-get-file-template-path=
+   :PROPERTIES:
+   :DATE:     <2020-12-19 Sat 13:57>
+   :END:
+
 
 ** =org-latex-get-subtree-template-path=
 
