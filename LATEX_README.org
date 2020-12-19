@@ -34,7 +34,7 @@ The main function for compiling, =org-latex-compile-with-template=  provides an 
 
 
 
-** Export steps
+** Export steps (for function =org-latex-compile-with-template=)
 
 ***  Step 1: Convert org-mode to latex
    
@@ -55,6 +55,8 @@ The arguments provided to =org-export-as= work as follows:
 - ext-plist set to =nil=: No other customization properties are provided.
 
 *** Step 2: save latex to file
+
+Step 1 converts the selected part of the org-mode buffer to latex. The resulting latex code is saved to file =body.tex= inside the templates directory.
 
 *** Step 3: get framework file
 **** 3.1 Get path of framework file
@@ -78,6 +80,8 @@ This is important so that when recompiling the buffer or subtree, the same frame
 
 ** =org-latex-export-path=
 
+The variable =org-latex-export-path= 
+
 ** =org-latex-bib-folder=
 
 ** =org-latex-bib-filename=
@@ -87,6 +91,8 @@ This is important so that when recompiling the buffer or subtree, the same frame
 
 
 ** =org-latex-default-template-path=
+
+
 
 ** =org-latex-body-path=
 
