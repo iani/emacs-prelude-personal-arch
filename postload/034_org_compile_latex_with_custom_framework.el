@@ -89,7 +89,7 @@
   Concatenate org-latex-export-path with default path.
   Issue error if latex-export folder has not been installed."
   (let ((template-path (concat org-latex-export-path
-                               "/templates/000BASIC/framework.tex")))
+                               "/templates/000BASIC/history/framework.tex")))
     (if (file-exists-p template-path)
         template-path
       (error "You must install latex-templates in your home folder to use this."))))
@@ -159,6 +159,10 @@
       (insert "\\noindent\n")
       (insert latex-output)
       (write-file body-path))
+    ;; prepare framework file by copying template file to the
+    ;; compilation folder, and naming it "framework.tex"
+
+    (copy-file template-path (concat template-directory "framework.tex") t)
     ;; compile framework and body files into framework.pdf file
     (latex-compile-file-with-latexmk pdflatexp template-path t) ;; t: do not open!
     (copy-file
