@@ -103,7 +103,7 @@
       (define-key sclang-mode-map (kbd "C-\"") 'sclang-insert-comment-with-date)
       (define-key sclang-mode-map (kbd "C-M-\"") 'sclang-insert-snippet-with-date)
       ;; under development:
-      (define-key sclang-mode-map (kbd "C-c C-v) 'sclang-toggle-snippet-routine)
+      (define-key sclang-mode-map (kbd "C-c C-v") 'sclang-toggle-snippet-routine)
 
       (key-chord-define sclang-mode-map "11" 'sclang-2-windows)
       ;; (key-chord-define sclang-mode-map "''" 'sclang-plusgt)

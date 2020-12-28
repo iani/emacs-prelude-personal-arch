@@ -53,7 +53,25 @@ This is the folder containing all files involved in the export process. Per defa
 
 ** template folder
 
+** =org-latex-default-template-path=
 
+
+#+begin_src emacs-lisp
+(defun org-latex-default-template-path ()
+  "Calculate full path of file to default template framework file.
+  Concatenate org-latex-export-path with default path.
+  Issue error if latex-export folder has not been installed."
+  (let ((template-path (concat org-latex-export-path
+                               "/templates/000BASIC/history/framework.tex")))
+    (if (file-exists-p template-path)
+        template-path
+      (error "You must install latex-templates in your home folder to use this."))))
+
+(org-latex-default-template-path)
+#+end_src
+
+#+RESULTS:
+: /home/iani/latex-exports/templates/000BASIC/history/framework.tex
 
 ** exports folder
 

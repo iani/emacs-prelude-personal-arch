@@ -58,7 +58,7 @@
 ;;     ))
 
 
-  ;;; Code:
+;;; Code:
 
 ;; First load this package to initialize variables:
 (require 'ox-latex)
@@ -66,10 +66,68 @@
 ;; Use xelatex as latex compiler, thus enabling use of native fonts for greek etc.
 (setq org-latex-compiler "xelatex")
 
+;; ================================================================
+;; PATHS OF DIRECTORIES AND FILES USED IN THE COMPILE PROCESS:
+
 (defcustom org-latex-export-path (file-truename "~/latex-exports")
-  "Directory where latex exports are stored."
+  "Directory where latex template and export files are stored.
+Both the source files and the resulting pdf files are stored in this directory."
   :group 'org-latex-compile)
 
+(defcustom org-latex-template-directory "/000BASIC"
+  "Subdirectory containing sources for compiling latex.
+Contains the framework file with latex header, style specifications and footer,
+and any auxiliary files e.g. bibtex, images etc.
+The body.tex file produced by org-export-as as well as the resulting
+pdf file are temporarily stored here.  The final pdf is copied to ../exports
+after the end of the export process.
+"
+  :group 'org-latex-compile)
+
+(defcustom org-latex-history-directory "/history"
+  "Subdirectory storing framework files.
+After each export, add Copy file framework.tex after each export to this directory,
+used to compile pdf after after each export, and
+"
+  :group 'org-latex-compile)
+
+(defun org-latex-framework-path ()
+  "Calculate actual path of framework file."
+  (let ((template-path (concat org-latex-export-path
+                               org-latex-template-directory
+                               org-latex-history-directory
+                               "/framework.tex")))
+    (if (file-exists-p template-path)
+        template-path
+      (error "You must install latex-templates in your home folder to use this."))))
+
+(defun org-latex-default-framework-path ()
+  "Calculate default path of framework file."
+  (let ((template-path (concat org-latex-export-path
+                               org-latex-template-directory
+                               org-latex-history-directory
+                               "/framework.tex")))
+    (if (file-exists-p template-path)
+        template-path
+      (error "You must install latex-templates in your home folder to use this."))))
+
+(defun org-latex-body-path (framework-path)
+  "Calculate full path of file to export latex body from org."
+  (concat org-latex-export-path org-latex-template-directory "/body.tex"))
+
+(defun org-latex-get-subtree-template-path ()
+  "Get latex template file path from LATEX_HEADER_PATH property of current subtree."
+  (save-excursion
+    (org-with-wide-buffer
+     (goto-char (point-min)))
+    (let* ((property-name "LATEX_HEADER_PATH")
+           (property-value (org-entry-get (point) property-name)))
+      (if property-value
+          property-value
+        (org-latex-get-file-template-path)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Bibliography stuff - not yet implemented
 (defcustom org-latex-bib-folder "/bibliographies/"
   "Directory where default bib files are stored.
   This is a subdirectory of ORG-LATEX-EXPORT-PATH."
@@ -84,19 +142,9 @@
   Concatenate org-latex-export-path with org-latex-bib-folder and org-latex-bib-filename."
   (concat org-latex-export-path org-latex-bib-folder org-latex-bib-filename))
 
-(defun org-latex-default-template-path ()
-  "Calculate full path of file to default template framework file.
-  Concatenate org-latex-export-path with default path.
-  Issue error if latex-export folder has not been installed."
-  (let ((template-path (concat org-latex-export-path
-                               "/templates/000BASIC/history/framework.tex")))
-    (if (file-exists-p template-path)
-        template-path
-      (error "You must install latex-templates in your home folder to use this."))))
+;;; end of bibliography stuff block
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun org-latex-body-path (framework-path)
-  "Calculate full path of file to body file from FRAMEWORK-PATH."
-  (concat (file-name-directory framework-path) "body.tex"))
 
 (defun org-pdflatex-compile-buffer ()
   "Export buffer as body.tex and create pdf with pdflatex using template.
@@ -257,17 +305,6 @@
   "Post the path of the latex template file for current subtree."
   (interactive)
   (message "The subtree template path is:\n%s" (org-latex-get-subtree-template-path)))
-
-(defun org-latex-get-subtree-template-path ()
-  "Get latex template file path from LATEX_HEADER_PATH property of current subtree."
-  (save-excursion
-    (org-with-wide-buffer
-     (goto-char (point-min)))
-    (let* ((property-name "LATEX_HEADER_PATH")
-           (property-value (org-entry-get (point) property-name)))
-      (if property-value
-          property-value
-        (org-latex-get-file-template-path)))))
 
 (defun org-latex-set-subtree-template-interactively ()
   "Read value of LATEX_HEADER_PATH property from user and set it in current subtree."
