@@ -97,6 +97,7 @@
 (eval-after-load 'org
   '(progn
      (define-key org-mode-map (kbd "C-M-S-o") 'hydra-org/body)
+     (define-key org-mode-map (kbd "C-M-<") 'hydra-org-table/body)
      (define-key org-mode-map (kbd "C-M-S-h") 'hydra-hugo/body)
      ;; alias for org-cycle, more convenient than TAB
      (define-key org-mode-map (kbd "C-M-]") 'org-cycle)

@@ -86,8 +86,10 @@ after the end of the export process.
 
 (defcustom org-latex-history-directory "/history"
   "Subdirectory storing framework files.
-After each export, add Copy file framework.tex after each export to this directory,
-used to compile pdf after after each export, and
+After each export, rename and copy file framework.tex (the file providing the
+style and package specifications for compiling the pdf) to this directory.
+The name is named after from the filename or compile name of the pdf + timestamp.
+
 "
   :group 'org-latex-compile)
 
