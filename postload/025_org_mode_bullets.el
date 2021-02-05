@@ -10,5 +10,9 @@
         '(
           "⦿" "●" "○" "⧁" "⟾" "⤇" "⟹" "⥤" "⟶" "◎" "◆" "◇" "■" "□" "◼" "◻" "⚙"
           ))
+
+;; add this macro for inserting item bullets ( 5 Feb 2021 22:21)
+(fset 'org-insert-item-dash
+      (kmacro-lambda-form [?\C-a ?- ?\C-n ?\C-a] 0 "%d"))
 (provide 'org_mode_bullets)
 ;;; 025_org_mode_bullets.el ends here
