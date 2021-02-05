@@ -1,5 +1,6 @@
 # 15 Dec 2020 09:07
-About org-latex-compile-with-template 
+
+About org-latex-compile-with-template
 
 * Purpose: Simplify the customization of Latex export from Org mode
 
@@ -28,30 +29,53 @@ Compile entire buffer using xelatex.  Xelatex
 ** "K" kill-latex-process-buffer "kill latex process buffer" :exit 
 ** "q" quit "exit hydra"
 
-* How it Works
+* How it Works: Main function and what it does
 
-The main function for compiling, =org-latex-compile-with-template=  provides an alternative way to export the current buffer or subtree as latex. This function gets the header and footer for the latex file from a template file written in =LaTeX=. It does not use any header from org-mode options.  Using a template file instead of writing the org-mode options in emacs-lisp makes it easier to edit and try out headers.
+The main function for compiling, =org-latex-compile-with-template=  provides an alternative way to export the current buffer or subtree as latex. This function gets the header and footer for the latex file from a template file written in =LaTeX=. It does not use any header from org-mode options.  By using a template file instead of writing the org-mode options in emacs-lisp makes it easier to edit and try out headers.
 
 * Key files and folders
 
-** overall folder: =-org-latex-export-path=
+** Overview / Introduction 
 
-Customizable variable:
+The directories used are: 
 
-#+begin_src elisp
-(defcustom org-latex-export-path (file-truename "~/latex-exports")
-  "Directory where latex exports are stored."
-  :group 'org-latex-compile)
+- =Directory for compiling the pdf= :: =compile=
+- =Export directory= :: =exports=
 
-org-latex-export-path
-#+end_src
+The two directories above are put together in one directory, called =latex-exports=. 
 
-#+RESULTS:
-: /home/iani/latex-exports
+** top directory: =latex-exports=, custom variable: =-org-latex-export-path=
 
-This is the folder containing all files involved in the export process. Per default, it contains two subdirectories: (a) template folder (=templates=), (b) exports folder (=exports=).  These are described in the following sections.
+The directory contains the other 2 directories used for this function, (=template=) and (=exports=) directories.
 
-** template folder
+*** coding and use comments
+
+
+ Customizable variable:
+
+ #+begin_src elisp
+ (defcustom org-latex-export-path (file-truename "~/latex-exports")
+   "Directory where latex exports are stored."
+   :group 'org-latex-compile)
+
+ org-latex-export-path
+ #+end_src
+
+ #+RESULTS:
+ : /home/iani/latex-exports
+
+ This is the folder containing all files involved in the export process. Per default, it contains two subdirectories: (a) template folder (=templates=), (b) exports folder (=exports=).  These are described in the following sections.
+
+** compile directory: =compile=
+
+This contains the framework file, =framework.tex=, as well as any other files that are necessary for the file such as custom style definitions not included in the standard latex disribution, image or bibliography files.  Additionally, several additional several files and folders required for the pdf compilation process are placed here: 
+
+- The file =body.tex= is produced by the export function and contains the main body of the document.  It is imported by =framework.tex=. 
+- The folder =templates= is used to store different types of templates that can be used to format the document in different styles.  
+
+The =framework.tex= file is copied from the =templates= subdirectory to the root of the =frameworks= directrory
+
+** exports directory =exports=
 
 ** =org-latex-default-template-path=
 
