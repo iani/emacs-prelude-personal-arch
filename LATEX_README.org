@@ -48,7 +48,7 @@ The directories above are put together in one directory, called =latex-exports=.
 
 Custom variable =org-latex-export-path= holds the path of the directory which contains directories =compile= (templates and help files for compiling from latex to pdf), and =exports= (the pdf files exported by this system.). Its default value is: =~/latex-exports=.
 
-** compilation directory =compile_framework=
+** compilation subdirectory =compile_framework=
 
 This contains the files actually used to actually compile the pdf.  
 
@@ -62,29 +62,32 @@ Initially, we will test this as a regular directory.  At a second stage, we will
   
  2. =body.tex= : This file contains the latex code produced by org-mode export, which is the main body of the contents of the document.  The file is produced each time before compiling the document to pdf. 
 
-*** 
+*** Additional files in =compile_framework= and customization through latex fragments
 
-** templates and compile directory: =templates=
+The =compile_framework= directory may also contain additional files needed for the compilation, such as latex style files, bibliography files, images and additional latex fragments for import, such as headers or footers, bibliography or front page definition files.  The latex fragments enable one to re-use the main framework file =framework.tex= and the style definitions previously tested in other documents, and to provide customized front page, header, footer or other information, which are not produced by exporting the org-mode text as body only.
 
-*** Structure and use of files in =templates=
+To customize a given template, one manually copies the template into a new folder, and then makes the necessary modifications in the files of the copied folder.
+ 
+** =templates= subdirectory
 
-The compile directory has 2 subdirectories:
-
-1. =framework= : 
-2. =templates= : This contains several subdirectories.  Each subdirectory contains all files
-*** Structure of a template subdirectory
-
-
-
-*** Older overview - notes
- This contains the framework file, =framework.tex=, as well as any other files that are necessary for the file such as custom style definitions not included in the standard latex disribution, image or bibliography files.  Additionally, several additional several files and folders required for the pdf compilation process are placed here: 
-
- - The file =body.tex= is produced by the export function and contains the main body of the document.  It is imported by =framework.tex=. 
- - The folder =templates= is used to store different types of templates that can be used to format the document in different styles.  
-
- The =framework.tex= file is copied from the =templates= subdirectory to the root of the =frameworks= directrory
+The =templates= subdirectory 
 
 ** exports directory =exports=
+
+is used 
+
+* What the user needs to (or can) specify
+
+** 1. The path of the =latex-exports= based directory.
+This is a custom variable with default value =~/latex-exports=
+The user can customize this value through the default methods available in emacs for custom variables.
+
+** 2. The path of the template to be used for exporting
+
+This is merely the name of a subdirectory under =latex-exports/templates=.
+It is specified on a file basis or subtree basis.  Its default value is =default_template=. 
+
+* Older notes
 
 ** =org-latex-default-template-path=
 
