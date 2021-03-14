@@ -38,42 +38,51 @@ The main function for compiling, =org-latex-compile-with-template=  provides an 
 ** Overview / Introduction 
 
 The directories used are: 
+- Directory used to compile the pdf file :: =compile_framework=
+- Directory containing template directories for compiling the pdf :: =templates=
+- Export directory :: =exports=
 
-- =Directory for compiling the pdf= :: =compile=
-- =Export directory= :: =exports=
-
-The two directories above are put together in one directory, called =latex-exports=. 
+The directories above are put together in one directory, called =latex-exports=. 
 
 ** top directory: =latex-exports=, custom variable: =-org-latex-export-path=
 
-The directory contains the other 2 directories used for this function, (=template=) and (=exports=) directories.
+Custom variable =org-latex-export-path= holds the path of the directory which contains directories =compile= (templates and help files for compiling from latex to pdf), and =exports= (the pdf files exported by this system.). Its default value is: =~/latex-exports=.
 
-*** coding and use comments
+** compilation directory =compile_framework=
+
+This contains the files actually used to actually compile the pdf.  
+
+Initially, we will test this as a regular directory.  At a second stage, we will test if it can also work as *symbolic link* to a directory located inside =templates=.
+
+*** Minimal framework directory configuration
+
+ A minimal =compile_framework= directory contains just 2 files: 
+
+ 1. =framework.tex= : This is a framework tex file, which encloses the main body of the document in a =\begin{document}= and =\end{document}= statement, and also provides any package, document definition and overall configuration statements needeed to compile the document to pdf.  It also contains an =\import{file}= directive, in order to import the main body of the document which is exported from org-mode.  
+  
+ 2. =body.tex= : This file contains the latex code produced by org-mode export, which is the main body of the contents of the document.  The file is produced each time before compiling the document to pdf. 
+
+*** 
+
+** templates and compile directory: =templates=
+
+*** Structure and use of files in =templates=
+
+The compile directory has 2 subdirectories:
+
+1. =framework= : 
+2. =templates= : This contains several subdirectories.  Each subdirectory contains all files
+*** Structure of a template subdirectory
 
 
- Customizable variable:
 
- #+begin_src elisp
- (defcustom org-latex-export-path (file-truename "~/latex-exports")
-   "Directory where latex exports are stored."
-   :group 'org-latex-compile)
+*** Older overview - notes
+ This contains the framework file, =framework.tex=, as well as any other files that are necessary for the file such as custom style definitions not included in the standard latex disribution, image or bibliography files.  Additionally, several additional several files and folders required for the pdf compilation process are placed here: 
 
- org-latex-export-path
- #+end_src
+ - The file =body.tex= is produced by the export function and contains the main body of the document.  It is imported by =framework.tex=. 
+ - The folder =templates= is used to store different types of templates that can be used to format the document in different styles.  
 
- #+RESULTS:
- : /home/iani/latex-exports
-
- This is the folder containing all files involved in the export process. Per default, it contains two subdirectories: (a) template folder (=templates=), (b) exports folder (=exports=).  These are described in the following sections.
-
-** compile directory: =compile=
-
-This contains the framework file, =framework.tex=, as well as any other files that are necessary for the file such as custom style definitions not included in the standard latex disribution, image or bibliography files.  Additionally, several additional several files and folders required for the pdf compilation process are placed here: 
-
-- The file =body.tex= is produced by the export function and contains the main body of the document.  It is imported by =framework.tex=. 
-- The folder =templates= is used to store different types of templates that can be used to format the document in different styles.  
-
-The =framework.tex= file is copied from the =templates= subdirectory to the root of the =frameworks= directrory
+ The =framework.tex= file is copied from the =templates= subdirectory to the root of the =frameworks= directrory
 
 ** exports directory =exports=
 
