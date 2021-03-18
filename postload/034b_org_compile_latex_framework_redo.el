@@ -55,6 +55,14 @@
 ;;      Get template name from subtree property
 
 ;;; ================================================================
+;; Interactive functions (called from hydra. Calling with U-argument
+;; switches not feasible because of 2 options: xelatexp, subtreep)
+;;; 1. Main function: org-compile-latex-with-custom-framework
+;;; argument: (P - interactive with prefix)
+;; - entirefilep: if not nil, compile entire file. Else compile subtree
+;;; 2. Set compiler choice: xelatex or pdflatex
+;; Function: org-latex-set-compiler
+;; Allow a choice of xelatex or pdflatex from minibuffer
 
 (defcustom org-latex-export-path (file-truename "~/latex-exports")
   "Directory where latex template and export files are stored.
