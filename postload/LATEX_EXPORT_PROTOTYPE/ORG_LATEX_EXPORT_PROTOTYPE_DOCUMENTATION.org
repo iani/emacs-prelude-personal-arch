@@ -47,17 +47,24 @@ The template is linked (or copied?) from this path to org-latex-compile-dir
 * Auxiliary help functions for getting properties from file
 
 ** org-latex-get-file-template-name :
- ;;      Get template name from file property
+Get template name from file property
 
 ** org-latex-get-subtree-template-name :
- ;;      Get template name from subtree property
+Get template name from subtree property
 
-* Interactive functions (called from hydra. Calling with U-argument 
-;; 
-;; switches not feasible because of 2 options: xelatexp, subtreep)
-;;; 1. Main function: org-compile-latex-with-custom-framework
-;;; argument: (P - interactive with prefix)
-;; - entirefilep: if not nil, compile entire file. Else compile subtree
-;;; 2. Set compiler choice: xelatex or pdflatex
-;; Function: org-latex-set-compiler
-;; Allow a choice of xelatex or pdflatex from minibuffer
+* Usage / API 
+
+** Customization parameters
+
+
+
+** Interactive functions
+
+
+
+ ;;; 1. Main function: org-compile-latex-with-custom-framework
+ ;;; argument: (P - interactive with prefix)
+ ;; - entirefilep: if not nil, compile entire file. Else compile subtree
+ ;;; 2. Set compiler choice: xelatex or pdflatex
+ ;; Function: org-latex-set-compiler
+ ;; Allow a choice of xelatex or pdflatex from minibuffer
