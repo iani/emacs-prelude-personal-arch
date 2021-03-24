@@ -1,0 +1,63 @@
+# 24 Mar 2021 10:21
+* Paths and path components for compiling
+** Summary
+
+There is one custom variable: org-latex-base
+
+There is one function for obtaining the selected-template name from the exported file or subtree: org-latex-selected-template
+
+There are are 4 functions for obtaining the paths of following directories:
+
+1. org-latex-compile-dir = org-latex-base ++ "compile_framework"
+2. org-latex-exports-dir = org-latex-base ++ "exports"
+3. org-latex-templates-dir = org-latex-base ++ "templates"
+4. org-latex-selected-template-path = org-latex-templates ++ org-latex-selected-template
+
+** Details
+
+*** org-latex-base : Basic directory (contains all other directories)
+ 
+org-latex-base is a custom variable;
+
+*** org-latex-compile-dir : used to compile the exported latex to pdf
+
+function: concatenate org-latex-base with "compile_framework"
+
+*** org-latex-exports-dir : compiled pdf files are copied to this directory.
+
+function: concatenate org-latex-base with "exports"
+
+*** org-latex-templates-dir : contains all templates as subdirectories
+
+function: concatenate org-latex-base with "templates"
+
+*** org-latex-selected-template : name of directory to use as template.
+
+function: obtain from file or subtree property "LATEX_TEMPLATE"
+
+defaults to "default_framework"
+
+*** org-latex-selected-template-path : path of template directory
+
+function: concatenate org-latex-templates-dir with selected-template
+
+The template is linked (or copied?) from this path to org-latex-compile-dir
+
+
+* Auxiliary help functions for getting properties from file
+
+** org-latex-get-file-template-name :
+ ;;      Get template name from file property
+
+** org-latex-get-subtree-template-name :
+ ;;      Get template name from subtree property
+
+* Interactive functions (called from hydra. Calling with U-argument 
+;; 
+;; switches not feasible because of 2 options: xelatexp, subtreep)
+;;; 1. Main function: org-compile-latex-with-custom-framework
+;;; argument: (P - interactive with prefix)
+;; - entirefilep: if not nil, compile entire file. Else compile subtree
+;;; 2. Set compiler choice: xelatex or pdflatex
+;; Function: org-latex-set-compiler
+;; Allow a choice of xelatex or pdflatex from minibuffer
