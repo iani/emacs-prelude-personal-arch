@@ -2,9 +2,9 @@
 * Paths and path components for compiling
 ** Summary
 
-There is one custom variable: org-latex-base
+There is one custom variable: org-latex-base. It stores the path of the folder containing all files used to customize latex export and store the resulting pdf files.
 
-There is one function for obtaining the selected-template name from the exported file or subtree: org-latex-selected-template
+There is one function for obtaining the name of the template to use from the exported file or subtree: org-latex-selected-template
 
 There are are 4 functions for obtaining the paths of following directories:
 
@@ -13,15 +13,21 @@ There are are 4 functions for obtaining the paths of following directories:
 3. org-latex-templates-dir = org-latex-base ++ "templates"
 4. org-latex-selected-template-path = org-latex-templates ++ org-latex-selected-template
 
+See next section, [[*Details][Details]], for explanations of how the above folders are used. 
+
 ** Details
 
 *** org-latex-base : Basic directory (contains all other directories)
  
-org-latex-base is a custom variable;
+org-latex-base is a custom variable.
+
+Its default value is "~/latex-exports".
+
+It points to the folder which contains the folders and files for compiling org-mode with a custom template, that is, the templates for choosing a custom look, the compile directory for compiling from org to pdf via latex, and the exports directory which stores all pdf's produced by the user calling org-latex-compile-with-framework.
 
 *** org-latex-compile-dir : used to compile the exported latex to pdf
 
-function: concatenate org-latex-base with "compile_framework"
+The value of =org-latex-compile-dir= is computed by a function which concatenates =org-latex-base= with ="compile_framework"=.
 
 *** org-latex-exports-dir : compiled pdf files are copied to this directory.
 
