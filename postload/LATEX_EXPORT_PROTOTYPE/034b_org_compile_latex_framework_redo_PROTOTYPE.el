@@ -53,16 +53,22 @@ This is created by copying the selected template directory."
 (defun org-latex-selected-template (&optional subtreep)
   "Get name of selected template.
 If subtreep return subtree property. Else return file property"
-  (if subtreep
+  (stringify (if subtreep
       (or (org-property-or-variable-value org-latex-template-property)
             (org-latex-get-file-template))
-    (org-latex-get-file-template)))
+    (org-latex-get-file-template))))
+
+(defun stringify (theargument)
+  "Turn symbol into string if needed."
+  (if (symbolp theargument)
+      (symbol-name theargument)
+    theargument))
 
 (defun org-latex-get-file-template ()
   "If defined, return file property for latex template, else return default template."
   (org-get-global-buffer-property
-   org-latex-template-property
-   (symbol-name org-latex-default-template)))
+   (symbol-name org-latex-template-property)
+   org-latex-default-template))
 
 ;;; Helper functions for getting global file property
 (defun org-global-props (property &optional buffer)

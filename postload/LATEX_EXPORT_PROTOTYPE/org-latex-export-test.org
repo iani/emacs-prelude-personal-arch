@@ -1,24 +1,23 @@
 #+PROPERTY: BLAHBLABHLABHassss
 #+AUTHOR: xyzALS
 #+TITLE: the titles
-#+LATEX-TEMPLATE: Aba
+#+LATEX-TEMPLATE: Abakuk
 
 
 Test file for =org-latex-selected-template-path=.
 
 * test =org-latex-selected-template=
   :PROPERTIES:
-  :LATEX-TEMPLATE: basic-latex-
+  :LATEX-TEMPLATE: basic-latex
   :END:
 
 #+begin_src emacs-lisp
-(org-property-or-variable-value org-latex-template-property)
-(org-latex-selected-template-path)
+(org-latex-selected-template t)
 ;; (message "The template is: %s" (org-latex-selected-template-path t))
 #+end_src
 
 #+RESULTS:
-: basic-latex-
+: basic-latex
 
 #+begin_src emacs-lisp
 (org-get-global-buffer-property (symbol-name org-latex-template-property))
