@@ -1,13 +1,58 @@
+#+PROPERTY: BLAHBLABHLABHassss
+#+AUTHOR: xyzALS
+#+TITLE: the titles
+#+LATEX-TEMPLATE: Aba
+
+
 Test file for =org-latex-selected-template-path=.
 
 * test =org-latex-selected-template=
   :PROPERTIES:
-  :LATEX-TEMPLATE: my-basic-latex-template-tested
+  :LATEX-TEMPLATE: basic-latex-
   :END:
 
 #+begin_src emacs-lisp
-  (org-property-or-variable-value org-latex-template-property)
+(org-property-or-variable-value org-latex-template-property)
+(org-latex-selected-template-path)
+;; (message "The template is: %s" (org-latex-selected-template-path t))
 #+end_src
 
 #+RESULTS:
-: my-basic-latex-template-tested
+: basic-latex-
+
+#+begin_src emacs-lisp
+(org-get-global-buffer-property (symbol-name org-latex-template-property))
+#+end_src
+
+#+RESULTS:
+: Aba
+
+* maybe this works
+
+#+BEGIN_SRC emacs-lisp
+;; Definition of `org-global-props' that could go into your init file:
+(defun org-global-props (&optional property buffer)
+  "Get the plists of global org properties of current buffer."
+  (unless property (setq property "PROPERTY"))
+  (with-current-buffer (or buffer (current-buffer))
+    (org-element-map (org-element-parse-buffer) 'keyword (lambda (el) (when (string-match property (org-element-property :key el)) el)))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Stuff for your org-file:
+(car (mapcar (lambda (prop)
+
+        (org-element-property :value prop))
+    (org-global-props "XEPERIENCE")))
+#+END_SRC
+
+#+RESULTS:
+: BLAKGASDasdf
+
+* file test
+
+#+begin_src emacs-lisp
+
+#+end_src
+
+#+RESULTS:
+| org-data | nil | (section (:begin 1 :end 144 :contents-begin 1 :contents-end 143 :post-blank 1 :post-affiliated 1 :parent (org-data nil #0 (headline (:raw-value test =org-latex-selected-template= :begin 144 :end 405 :pre-blank 0 :contents-begin 181 :contents-end 404 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 144 :LATEX-TEMPLATE my-basic-latex-template-tested-123 :title (test  (verbatim (:value org-latex-selected-template :begin 151 :end 180 :post-blank 0 :parent #3))) :parent #2) (section (:begin 181 :end 405 :contents-begin 181 :contents-end 404 :post-blank 1 :post-affiliated 181 :parent #3) (property-drawer (:begin 181 :end 259 :contents-begin 196 :contents-end 250 :post-blank 1 :post-affiliated 181 :parent #4) (node-property (:key LATEX-TEMPLATE :value my-basic-latex-template-tested-123 :begin 196 :end 250 :post-blank 0 :post-affiliated 196 :parent #5))) (src-block (:language emacs-lisp :switches nil :parameters nil :begin 259 :end 356 :number-lines nil :preserve-indent nil :retain-labels t :use-labels t :label-fmt nil :value   (org-property-or-variable-value org-latex-template-property) |
+

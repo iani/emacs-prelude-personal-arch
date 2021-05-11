@@ -25,12 +25,12 @@
 Both the source files and the resulting pdf files are stored in this directory."
   :group 'org-latex-compile)
 
-(defcustom org-latex-default-template "default-template"
-  "Default template directory name."
-  :group 'org-latex-compile)
-
 (defcustom org-latex-template-property 'LATEX-TEMPLATE
   "Name of the org property that stores the latex template name."
+  :group 'org-latex-compile)
+
+(defcustom org-latex-default-template "default-template"
+  "Default template directory name."
   :group 'org-latex-compile)
 
 (defun org-latex-exports-dir ()
@@ -52,54 +52,47 @@ This is created by copying the selected template directory."
 
 (defun org-latex-selected-template (&optional subtreep)
   "Get name of selected template.
-If subtreep get from subtree property. Else from file property"
-  (let (selected-template)
-    (if selected-template
-        selected-template
-      org-latex-selected-template
-      ))  )
+If subtreep return subtree property. Else return file property"
+  (if subtreep
+      (or (org-property-or-variable-value org-latex-template-property)
+            (org-latex-get-file-template))
+    (org-latex-get-file-template)))
 
-(defcustom org-latex-template-directory "/000BASIC"
-  "Subdirectory containing sources for compiling latex.
-Contains the framework file with latex header, style specifications and footer,
-and any auxiliary files e.g. bibtex, images etc.
-The body.tex file produced by org-export-as as well as the resulting
-pdf file are temporarily stored here.  The final pdf is copied to ../exports
-after the end of the export process.
-"
-  :group 'org-latex-compile)
+(defun org-latex-get-file-template ()
+  "If defined, return file property for latex template, else return default template."
+  (org-get-global-buffer-property
+   org-latex-template-property
+   (symbol-name org-latex-default-template)))
 
-(defcustom org-latex-history-directory "/history"
-  "Subdirectory storing framework files.
-After each export, rename and copy file framework.tex (the file providing the
-style and package specifications for compiling the pdf) to this directory.
-The name is named after from the filename or compile name of the pdf + timestamp.
+;;; Helper functions for getting global file property
+(defun org-global-props (property &optional buffer)
+  "Get the plists of global org properties of current buffer."
+  (with-current-buffer (or buffer (current-buffer))
+    (org-element-map (org-element-parse-buffer) 'keyword
+      (lambda (el)
+        (when (string-match property (org-element-property :key el)) el)))))
 
-"
-  :group 'org-latex-compile)
+(defun org-get-global-buffer-property (prop &optional default)
+  "Get the value of property prop defined globally in current buffer.
+If not defined, return the default provided as optional argument."
+  (or
+   (car (mapcar (lambda (prop) (org-element-property :value prop))
+            (org-global-props prop)))
+   default))
 
-(defun org-latex-framework-path ()
-  "Calculate actual path of framework file."
-  (let ((template-path (concat org-latex-export-path
-                               org-latex-template-directory
-                               org-latex-history-directory
-                               "/framework.tex")))
-    (if (file-exists-p template-path)
-        template-path
-      (error "You must install latex-templates in your home folder to use this."))))
+(defun org-compile-latex-with-custom-framework (&optional filep)
+  "Export org to latex and compile that to pdf.
+If filep is true   "
+  (interactive "P")
+  (let ((subtreep (not filep)))
+    (if subtreep
+        (progn
+          (message "I WILL COMPILE THE SUBSECTION conc cond")
+          (message "The template is: %s" (org-latex-selected-template-path subtreep)))
+      (progn
+        (message "I ILL COMPILE THE ENTIRE FILE !!!!!!!! cond ocnd")
+        (message "The template is: %s"
+                 (org-latex-selected-template-path subtreep))))))
 
-(defun org-latex-default-framework-path ()
-  "Calculate default path of framework file."
-  (let ((template-path (concat org-latex-export-path
-                               org-latex-template-directory
-                               org-latex-history-directory
-                               "/framework.tex")))
-    (if (file-exists-p template-path)
-        template-path
-      (error "You must install latex-templates in your home folder to use this."))))
-
-(defun org-latex-body-path (framework-path)
-  "Calculate full path of file to export latex body from org."
-  (concat org-latex-export-path org-latex-template-directory "/body.tex"))
-
+(global-set-key (kbd "C-M-S-c") 'org-compile-latex-with-custom-framework)
 ;;; 034b_org_compile_latex_framework_redo ends here

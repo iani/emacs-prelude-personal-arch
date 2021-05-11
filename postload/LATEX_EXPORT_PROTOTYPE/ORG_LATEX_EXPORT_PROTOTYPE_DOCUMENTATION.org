@@ -78,7 +78,7 @@ Keyboard shortcut =C-M-S-c=.
 
 Keyboard shortcut for =hydra-latex/body= : =C-M-S-l=
 
-* outline of =org-compile-latex-with-custom-framework= 
+* Implementation outline of =org-compile-latex-with-custom-framework= 
 
 ** copy selected template to =compile-framework=
 
