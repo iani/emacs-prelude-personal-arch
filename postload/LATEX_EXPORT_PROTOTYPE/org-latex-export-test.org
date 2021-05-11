@@ -48,7 +48,7 @@ Test file for =org-latex-selected-template-path=.
 * file test
 
 #+begin_src emacs-lisp
-
+67
 #+end_src
 
 #+RESULTS:
