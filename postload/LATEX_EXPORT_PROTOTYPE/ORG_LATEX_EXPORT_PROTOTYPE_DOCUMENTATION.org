@@ -12,13 +12,15 @@ The main function that compiles a file or subtree into pdf via latex is =org-com
 
 * Getting the required paths
 
+Following are the variables and functions used to get the paths of the folders used by =org-compile-latex-with-custom-framework=.
+
 **  Custom variable:  =org-latex-base=
 
 =org-compile-latex-with-custom-framework= uses the custom variable =org-latex-base= as base for computing the required paths
 
 Its default value is =~/latex-exports=.
 
-** Functions =org-latex-exports-dir=, =org-latex-templates-dir=, =org-latex-compile-dir=
+** 3 Functions: =org-latex-exports-dir=, =org-latex-templates-dir=, =org-latex-compile-dir=
 
 These 3 functions compute the actual paths of the =exports=, =templates= and =compile_framework= directories as follows: 
 
@@ -30,7 +32,7 @@ These 3 functions compute the actual paths of the =exports=, =templates= and =co
 
 This computes the full path of the template directory. 
 
-org-latex-selected-template-path = org-latex-templates ++ org-latex-selected-template
+org-latex-selected-template-path = org-latex-templates ++ org-latex-selected-template (see below)
 
 =org-compile-latex-with-custom-framework= copies the directory =org-latex-selected-template-path= to =org-latex-compile-dir= and then uses the copied directory to compile the required document to pdf.
 
@@ -48,15 +50,6 @@ Copies the selected template to =org-latex-compile-dir=.
 
 * Usage / API 
 
-** Customization, parameters
-   :PROPERTIES:
-   :DATE:     <2021-03-25 Thu 08:19>
-   :END:
-
-- Custom variable =org-latex-base= (customizable with interactive function =customize-variable=). Default: =~/latex-exports=. Directory containing template files for compiling to pdf as well as the exported pdfs.
-- File or subtree property =org-latex-selected-template=. Contains the name of the directory of the template to use.  The directory must exist as a subdirectory of =org-latex-templates-dir=. Default: ="default-template"=.
-- File or subtree property =org-latex-compiler=.  Specifies the latex compiler to be used for pdf.  Suggested values: =xelatex= or =pdflatex=.  Default value: =xelatex=. 
-
 ** Main function (interactive):  =org-compile-latex-with-custom-framework=
    :PROPERTIES:
    :DATE:     <2021-03-25 Thu 08:19>
@@ -67,7 +60,16 @@ Main function: =org-compile-latex-with-custom-framework=
 Argument: =entirefilep=. (P - interactive with prefix)
 If not nil, compile entire file. Else compile subtree.
 
-Keyboard shortcut to be provided via hydra-latex/body =C-M-S-c=.
+Keyboard shortcut =C-M-S-c=.
+
+** Customization, parameters
+   :PROPERTIES:
+   :DATE:     <2021-03-25 Thu 08:19>
+   :END:
+
+- Custom variable =org-latex-base= (customizable with interactive function =customize-variable=). Default: =~/latex-exports=. Directory containing template files for compiling to pdf as well as the exported pdfs.
+- File or subtree property =org-latex-selected-template=. Contains the name of the directory of the template to use.  The directory must exist as a subdirectory of =org-latex-templates-dir=. Default: ="default-template"=.
+- File or subtree property =org-latex-compiler=.  Specifies the latex compiler to be used for pdf.  Suggested values: =xelatex= or =pdflatex=.  Default value: =xelatex=. 
 
 ** =hydra-latex/body= (redo)
    :PROPERTIES:
@@ -76,3 +78,20 @@ Keyboard shortcut to be provided via hydra-latex/body =C-M-S-c=.
 
 Keyboard shortcut for =hydra-latex/body= : =C-M-S-l=
 
+* outline of =org-compile-latex-with-custom-framework= 
+
+** copy selected template to =compile-framework=
+
+*** Calculate path of custom framework folder
+
+*** Copy custom framework folder to =compile-framework=
+
+** generate latex from org
+
+** save latex to file
+
+** compile latex to pdf
+
+** copy pdf to exports folder
+
+** open pdf for viewing
