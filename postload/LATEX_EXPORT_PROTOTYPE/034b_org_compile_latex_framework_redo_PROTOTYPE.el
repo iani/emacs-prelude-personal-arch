@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;; This is a redo from scratch to use a better template scheme
 ;; based on symbolic link from template folder to compile folder.
+;; see accompanying .org file for documentation
 
 ;;; Code:
 
@@ -14,60 +15,49 @@
 (setq org-latex-compiler "xelatex")
 
 ;;; ================================================================
-;;; Paths and path components for compiling
-;; ================ SUMMARY ================
-;; There is one custom variable: org-latex-base
-;; There is one function for obtaining the selected-template name from the
-;; exported file or subtree: org-latex-selected-template
-;; There are are 4 functions for obtaining the paths of following directories:
-;; 1. org-latex-compile-dir = org-latex-base ++ "compile_framework"
-;; 2. org-latex-exports-dir = org-latex-base ++ "exports"
-;; 3. org-latex-templates-dir = org-latex-base ++ "templates"
-;; 4. org-latex-selected-template-path =
-;;                  org-latex-templates ++ org-latex-selected-template
-;; ================ DETAILS ================
-;; 1. org-latex-base : Basic directory (contains all other directories)
-;; org-latex-base is a custom variable;
+;;; PATHS:
+;;; org-latex-base org-latex-default-template
+;;; org-latex-exports-dir org-latex-templates-dir org-latex-compile-dir
+;;;
 
-;; 2. org-latex-compile-dir : used to compile the exported latex to pdf
-;; function: concatenate org-latex-base with "compile_framework"
-
-;; 3. org-latex-exports-dir : compiled pdf files are copied to
-;; this directory.
-;; function: concatenate org-latex-base with "exports"
-
-;; 4. org-latex-templates-dir : contains all templates as subdirectories
-;; function: concatenate org-latex-base with "templates"
-
-;; 5. org-latex-selected-template : name of directory to use as template.
-;; function: obtain from file or subtree property "LATEX_TEMPLATE"
-;; defaults to "default_framework"
-
-;; 6. org-latex-selected-template-path : path of template directory
-;; The template is linked (or copied?) from this path to org-latex-compile-dir
-;; function: concatenate org-latex-templates-dir with selected-template
-
-;;; ================================================================
-;;; Auxiliary help functions for getting properties from file
-;; org-latex-get-file-template-name :
-;;      Get template name from file property
-;; org-latex-get-subtree-template-name :
-;;      Get template name from subtree property
-
-;;; ================================================================
-;; Interactive functions (called from hydra. Calling with U-argument
-;; switches not feasible because of 2 options: xelatexp, subtreep)
-;;; 1. Main function: org-compile-latex-with-custom-framework
-;;; argument: (P - interactive with prefix)
-;; - entirefilep: if not nil, compile entire file. Else compile subtree
-;;; 2. Set compiler choice: xelatex or pdflatex
-;; Function: org-latex-set-compiler
-;; Allow a choice of xelatex or pdflatex from minibuffer
-
-(defcustom org-latex-export-path (file-truename "~/latex-exports")
+(defcustom org-latex-base (file-truename "~/latex-exports/")
   "Directory where latex template and export files are stored.
 Both the source files and the resulting pdf files are stored in this directory."
   :group 'org-latex-compile)
+
+(defcustom org-latex-default-template "default-template"
+  "Default template directory name."
+  :group 'org-latex-compile)
+
+(defcustom org-latex-template-property 'LATEX-TEMPLATE
+  "Name of the org property that stores the latex template name."
+  :group 'org-latex-compile)
+
+(defun org-latex-exports-dir ()
+  "Directory where exported pdf files are stored."
+  (concat org-latex-base "exports"))
+
+(defun org-latex-templates-dir ()
+  "Directory storing templates for exporting to latex."
+  (concat org-latex-base "templates"))
+
+(defun org-latex-compile-dir ()
+  "Directory where latex is exported and compiled to pdf.
+This is created by copying the selected template directory."
+  (concat org-latex-base "compile_framework"))
+
+(defun org-latex-selected-template-path (&optional subtreep)
+  "Get path of selected template."
+  (concat org-latex-base (org-latex-selected-template subtreep)))
+
+(defun org-latex-selected-template (&optional subtreep)
+  "Get name of selected template.
+If subtreep get from subtree property. Else from file property"
+  (let (selected-template)
+    (if selected-template
+        selected-template
+      org-latex-selected-template
+      ))  )
 
 (defcustom org-latex-template-directory "/000BASIC"
   "Subdirectory containing sources for compiling latex.

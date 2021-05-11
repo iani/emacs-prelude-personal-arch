@@ -1,0 +1,13 @@
+Test file for =org-latex-selected-template-path=.
+
+* test =org-latex-selected-template=
+  :PROPERTIES:
+  :LATEX-TEMPLATE: my-basic-latex-template-tested
+  :END:
+
+#+begin_src emacs-lisp
+  (org-property-or-variable-value org-latex-template-property)
+#+end_src
+
+#+RESULTS:
+: my-basic-latex-template-tested
