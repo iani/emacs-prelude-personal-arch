@@ -3,7 +3,6 @@
 #+TITLE: the titles
 #+LATEX-TEMPLATE: Abakuk
 
-
 Test file for =org-latex-selected-template-path=.
 
 * test =org-latex-selected-template=
