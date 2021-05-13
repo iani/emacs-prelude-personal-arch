@@ -48,17 +48,19 @@ Both the source files and the resulting pdf files are stored in this directory."
 (defun org-latex-compile-dir ()
   "Directory where latex is exported and compiled to pdf.
 This is created by copying the selected template directory."
-  (concat org-latex-base "compile_framework/"))
+  (concat org-latex-base "compile_framework"))
 
 (defun org-latex-selected-template-path (&optional subtreep)
   "Get path of selected template."
-  (concat org-latex-base (org-latex-selected-template subtreep)))
+  (concat (org-latex-templates-dir) (org-latex-selected-template subtreep)))
 
 (defun org-latex-selected-template (&optional subtreep)
   "Get name of selected template.
 If subtreep return subtree property. Else return file property"
+  ;; dirty fix for the -or-variable part:
+  (set org-latex-template-property org-latex-default-template)
   (stringify (if subtreep
-      (or (org-property-or-variable-value org-latex-template-property)
+      (or (org-property-or-variable-value org-latex-template-property t)
             (org-latex-get-file-template))
     (org-latex-get-file-template))))
 
@@ -97,40 +99,46 @@ If not defined, return the default provided as optional argument."
   "Export org to latex and compile that to pdf.
 If filep is true export the entire file, else only the current section."
   (interactive "P")
-  (let* (pdf-file ;; used to copy file to exports folder
-         (subtreep (not filep))
+  (let* ((subtreep (not filep))
          (template-path (org-latex-selected-template-path subtreep))
          ;; path of source framework file to compile to pdf
-         (framework-path (concat template-path "/framework.tex"))
-         (export-filename ;; input filename from user, providing default
-          (read-string
-           "pdf export file copy name base:"
-           (if subtreep
-               (substring-no-properties
-                (replace-regexp-in-string "\\W" ""  (org-get-heading t t)))
-             (file-name-nondirectory (file-name-sans-extension
-                                      (buffer-file-name))))))
+         (compile-path (concat (org-latex-compile-dir) "/framework.tex"))
+         (pdf-file-path (concat (org-latex-compile-dir) "/framework.pdf"))
          (latex-output (org-export-as
                         ;; backend subtreep visible-only body-only ext-plist
                         'latex     subtreep      nil          t         nil
                         )))
+
+    (delete-directory (org-latex-compile-dir) t)
     (copy-directory template-path (org-latex-compile-dir))
-    ;; save latex outout as body file:
+    (delete-file (concat (org-latex-compile-dir) "/framework.pdf"))
+    ;; ;; save latex outout as body file:
     (with-temp-buffer
       ;; (insert "\\noindent\n") ;; start first paragraph non-indented. Needed?
       (insert latex-output)
       (write-file (concat (org-latex-compile-dir) "/body.tex")))
     ;; compile framework using content from exported body
     (setq pdf-file                                       ;; t: do not open!
-          (latex-compile-file-with-latexmk pdflatexp framework-path t))
-    (copy-file
-     pdf-file
-     (concat (org-latex-exports-dir) (file-name-base pdf-file) ".pdf"))
-    )
+          (latex-compile-file-with-latexmk pdflatexp compile-path))
+    (let ((final-copy-path
+           (concat (org-latex-exports-dir)
+                   ;; input filename from user, providing default
+                   (read-string
+                    "pdf export file copy name base:"
+                    (concat
+                     (if (and subtreep (org-get-heading t t))
+                         (substring-no-properties
+                          (replace-regexp-in-string "\\W" "" (org-get-heading t t)))
+                       (file-name-nondirectory (file-name-sans-extension
+                                                (buffer-file-name))))
+                     (format-time-string "_%y%m%d_%I%M%S")))
+                   ".pdf")))
+      (message "copying file to: %s" final-copy-path)
+      (copy-file pdf-file-path final-copy-path t)
+      (open-pdf-file final-copy-path)
+      )))
 
-  )
-
-(defun latex-compile-file-with-latexmk (&optional pdflatexp filename donotopen)
+(defun latex-compile-file-with-latexmk (&optional pdflatexp filename)
   "Compile tex file using latexmk.
   If PDFLATEXP then use pdflatex instead of xelatex.
   Open resulting pdf file with default macos open method."
@@ -141,29 +149,36 @@ If filep is true export the entire file, else only the current section."
     (kill-buffer "*Async Shell Command*"))
   ;; provide file name from buffer if needed
   (let* ((file (or filename (buffer-file-name)))
-         (pdf-file (concat ;; compute pdf filename from tex filename
-                    (file-name-sans-extension file)
-                    ".pdf"))
-         (org-latex-pdf-process
-          (if pdflatexp
-              '("latexmk -shell-escape -g -pdf -pdflatex=\"pdflatex\" -outdir=%o %f")
-            '("latexmk -shell-escape -g -pdf -pdflatex=\"xelatex\" -outdir=%o %f"))))
+          (pdf-file (concat ;; compute pdf filename from tex filename
+                     (file-name-sans-extension file)
+                     ".pdf"))
+          (org-latex-pdf-process
+           (if pdflatexp
+               '("latexmk -shell-escape -g -pdf -pdflatex=\"pdflatex\" -outdir=%o %f")
+             '("latexmk -shell-escape -g -pdf -pdflatex=\"xelatex\" -outdir=%o %f")))
+         )
+    (message "file is: %s" file)
     (message "latex compile command is:\n %s" org-latex-pdf-process)
     ;; why delete .bbl file?
-    ;; (delete-file (concat (file-name-sans-extension file) ".bbl"))
+    (message "deleting file: %s" (concat (org-latex-compile-dir) "/framework.pdf"))
+    (delete-file (concat (org-latex-compile-dir) "framework.pdf"))
+    (message "DELETED FILE: %s" (concat (org-latex-compile-dir) "/framework.pdf"))
     (org-latex-compile file)
-    (message "tex->pdf done. Opening:\n%s" (shell-quote-argument pdf-file))
-    (unless donotopen
-      ;; open the copy of the exported file:
-      ;; requires epdfview installed in arch linux
-      ;; for macos, use "open" instead.
-      (shell-command (concat "epdfview " (shell-quote-argument pdf-file) " & "))
-      ;; (shell-command (concat "open " (shell-quote-argument pdf-file)))
-      )
-    pdf-file ;; return pdf file for further use by other function if needed
+    (message "tex->pdf produced: %s" pdf-file)
+    pdf-file
     ))
 
-;; (concat (org-latex-compile-dir) "/body.tex")
+(defun open-pdf-file (pdf-file)
+  "Open pdf file with epdfview.
+Only works in linux with epdfview installed."
+  (interactive)
+  ;; open the exported file:
+  ;; requires epdfview installed in arch linux
+  ;; for macos, use "open" instead.
+  (message "Opening:\n%s" (shell-quote-argument pdf-file))
+  (shell-command (concat "epdfview " (shell-quote-argument pdf-file) " & "))
+  ;;    ;; (shell-command (concat "open " (shell-quote-argument pdf-file)))
+  )
 
 (global-set-key (kbd "C-M-S-c") 'org-compile-latex-with-custom-framework)
 ;;; 034b_org_compile_latex_framework_redo ends here
