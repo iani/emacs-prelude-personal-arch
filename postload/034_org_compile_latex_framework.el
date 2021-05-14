@@ -216,7 +216,10 @@ Only works in linux with epdfview installed."
          (let ((new-line "")
                (here (re-search-forward
                       (concat "^"
-                              (regexp-quote (concat "#+" "LATEX_HEADER_PATH" ":"))
+                              (regexp-quote
+                               (concat "#+"
+                                       (symbol-name org-latex-template-property)
+                                       ":"))
                               " ?") nil t)))
            (cond
             (here
@@ -226,15 +229,45 @@ Only works in linux with epdfview installed."
             (t
              (setq new-line "\n")
              (goto-char (point-min))))
-           (insert "#+LATEX_HEADER_PATH: " path new-line))))
+           (insert (symbol-name org-latex-template-property) path new-line))))
       (message "You selected: \n%s" path)))
 
-;;; check! ????
+(defun org-latex-post-subtree-template-path ()
+  "Post the path of the latex template file for current subtree."
+  (interactive)
+  (message "The subtree template path is:\n%s" (org-latex-selected-template-path t)))
+
+(defun org-latex-post-file-template-path ()
+  "Post the path of the latex template file for current subtree."
+  (interactive)
+  (message "The subtree template path is:\n%s" (org-latex-selected-template-path)))
+
+(defun org-latex-find-file-template-file ()
+  "Open file's template file."
+  (interactive)
+  (find-file (concat (org-latex-selected-template-path) "/framework.tex")))
+
+(defun org-latex-find-subtree-template-file ()
+  "Open file's template file."
+  (interactive)
+  (find-file (concat (org-latex-selected-template-path t) "/framework.tex")))
+
+(defun org-use-xelatex ()
+  "Use xelatex to compile org to pdf."
+  (interactive)
+  (setq pdflatexp nil))
+
+(defun org-use-pdflatex ()
+  "Use pdflatex to compile org to pdf."
+  (interactive)
+  (setq pdflatexp t))
+
+;;; ================================================================
+;;; Keyboard shortcuts
 (global-set-key (kbd "C-M-S-c") 'org-compile-latex-with-custom-framework)
 
 (defhydra hydra-latex (:color red :columns 2)
   "latex hydra"
-
   ("l" compile-subtree-to-pdf "subtree->pdf")
   ("L" compile-buffer-to-pdf "buffer->pdf")
   ("p" org-use-pdflatex "use pdflatex")
