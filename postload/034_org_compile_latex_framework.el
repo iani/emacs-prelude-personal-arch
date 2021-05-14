@@ -262,6 +262,16 @@ Only works in linux with epdfview installed."
   (interactive)
   (setq pdflatexp t))
 
+(defun compile-subtree-to-pdf ()
+  "Compile subtree to pdf."
+  (interactive)
+  (org-compile-latex-with-custom-framework))
+
+(defun compile-buffer-to-pdf ()
+  "Compile subtree to pdf."
+  (interactive)
+  (org-compile-latex-with-custom-framework t))
+
 ;;; ================================================================
 ;;; Keyboard shortcuts
 (global-set-key (kbd "C-M-S-c") 'org-compile-latex-with-custom-framework)
