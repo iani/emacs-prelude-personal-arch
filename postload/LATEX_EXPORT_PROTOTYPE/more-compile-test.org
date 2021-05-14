@@ -10,6 +10,9 @@ floh floh floh23
 grobligfff assdf
 
 ** asdf asdf 
+   :PROPERTIES:
+   :LATEX-TEMPLATE: /home/iani/latex-exports/templates/000BASIC/
+   :END:
 
 
 asssssssss

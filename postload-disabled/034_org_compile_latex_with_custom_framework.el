@@ -331,16 +331,13 @@
     (interactive)
     (find-file (org-latex-get-subtree-template-path)))
 
-  ;;; redoing the fucker
   (defhydra hydra-latex (:color red :columns 2)
     "latex hydra"
 
-    ("x" org-xelatex-compile-buffer "ORG xelatex buffer")
-    ("X" org-xelatex-compile-subtree "ORG xelatex subtree")
-    ("l" pdflatex-compile-buffer "TEX pdflatex buffer")
-    ("L" xelatex-compile-buffer "TEX xelatex buffer")
-    ("p" org-pdflatex-compile-buffer "ORG pdflatex buffer")
-    ("P" org-pdflatex-compile-subtree "ORG pdflatex subtree")
+    ("p" org-use-pdflatex "ORG xelatex buffer")
+    ("x" org-use-xelatex "ORG xelatex subtree")
+    ("l" compile-subtree-to-pdf "subtree->pdf")
+    ("L" compile-buffer-to-pdf "buffer->pdf")
     ("t" org-latex-set-buffer-template "set buffer template")
     ("T" org-latex-set-subtree-template "set subtree template")
     ("/" org-latex-post-file-template-path "post file template path")

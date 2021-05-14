@@ -138,7 +138,7 @@ If filep is true export the entire file, else only the current section."
       (open-pdf-file final-copy-path)
       )))
 
-(defun latex-compile-file-with-latexmk (&optional pdflatexp filename)
+(defun latex-compile-file-with-latexmk (&optional pdflatexoption filename)
   "Compile tex file using latexmk.
   If PDFLATEXP then use pdflatex instead of xelatex.
   Open resulting pdf file with default macos open method."
@@ -153,7 +153,7 @@ If filep is true export the entire file, else only the current section."
                      (file-name-sans-extension file)
                      ".pdf"))
           (org-latex-pdf-process
-           (if pdflatexp
+           (if pdflatexoption
                '("latexmk -shell-escape -g -pdf -pdflatex=\"pdflatex\" -outdir=%o %f")
              '("latexmk -shell-escape -g -pdf -pdflatex=\"xelatex\" -outdir=%o %f")))
          )
@@ -180,5 +180,74 @@ Only works in linux with epdfview installed."
   ;;    ;; (shell-command (concat "open " (shell-quote-argument pdf-file)))
   )
 
+;;; ================================================================
+;; helper functions
+
+(defun org-latex-set-subtree-template ()
+    "Set value of LATEX_HEADER_PATH property in current subtree."
+    (interactive)
+    (let ((path (org-latex-read-template-path)))
+      (org-set-property (symbol-name org-latex-template-property) path)
+     (message "You selected: \n%s" path)))
+
+(file-name-as-directory "/alphs")
+
+(file-name-nondirectory (directory-file-name "/exeter/alphsb/"))
+
+(defun org-latex-read-template-path ()
+  "Read template path interactively from default folder."
+  (interactive)
+  (let
+      ((result
+        (read-file-name "Select template file: " "~/latex-exports/templates/")))
+    (file-name-nondirectory
+     (directory-file-name
+      (if (file-directory-p result)
+          result
+        (file-name-directory result))))))
+
+  (defun org-latex-set-buffer-template ()
+    "Set value of LATEX_HEADER_PATH property globally in current buffer."
+    (interactive)
+    (let ((path (org-latex-read-template-path)))
+      (save-excursion
+        (org-with-wide-buffer
+         (goto-char (point-min))
+         (let ((new-line "")
+               (here (re-search-forward
+                      (concat "^"
+                              (regexp-quote (concat "#+" "LATEX_HEADER_PATH" ":"))
+                              " ?") nil t)))
+           (cond
+            (here
+             (goto-char here)
+             (beginning-of-line)
+             (kill-line))
+            (t
+             (setq new-line "\n")
+             (goto-char (point-min))))
+           (insert "#+LATEX_HEADER_PATH: " path new-line))))
+      (message "You selected: \n%s" path)))
+
+;;; check! ????
 (global-set-key (kbd "C-M-S-c") 'org-compile-latex-with-custom-framework)
+
+(defhydra hydra-latex (:color red :columns 2)
+  "latex hydra"
+
+  ("l" compile-subtree-to-pdf "subtree->pdf")
+  ("L" compile-buffer-to-pdf "buffer->pdf")
+  ("p" org-use-pdflatex "use pdflatex")
+  ("x" org-use-xelatex "use xelatex")
+  ("t" org-latex-set-buffer-template "set buffer template")
+  ("T" org-latex-set-subtree-template "set subtree template")
+  ("/" org-latex-post-file-template-path "post file template path")
+  ("?" org-latex-post-subtree-template-path "post subtree template path")
+  ("f" org-latex-find-file-template-file "find file template file")
+  ("F" org-latex-find-subtree-template-file "find subtree template file")
+  ("q" quit "exit hydra" :exit t))
+
+
+(global-set-key (kbd "C-M-S-l") 'hydra-latex/body)
+
 ;;; 034b_org_compile_latex_framework_redo ends here
