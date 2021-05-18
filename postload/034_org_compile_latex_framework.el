@@ -114,7 +114,8 @@ If filep is true export the entire file, else only the current section."
     (delete-file (concat (org-latex-compile-dir) "/framework.pdf"))
     ;; ;; save latex output as body file:
     (with-temp-buffer
-      ;; (insert "\\noindent\n") ;; start first paragraph non-indented. Needed?
+      (insert "\\noindent\n") ;; start first paragraph non-indented
+      ;; This works when printing texts without an initial heading.
       (insert latex-output)
       (write-file (concat (org-latex-compile-dir) "/body.tex")))
     ;; compile framework using content from exported body
@@ -145,7 +146,7 @@ If filep is true export the entire file, else only the current section."
   ;; (message "*Async Shell Command*")
   ;; (message "*Async Shell Command* exists? %s"
   ;;          (gnus-buffer-exists-p "*Async Shell Command*"))
-  (when (gnus-buffer-exists-p "*Async Shell Command*")
+ (when (gnus-buffer-exists-p "*Async Shell Command*")
     (kill-buffer "*Async Shell Command*"))
   ;; provide file name from buffer if needed
   (let* ((file (or filename (buffer-file-name)))
@@ -165,6 +166,8 @@ If filep is true export the entire file, else only the current section."
     (message "DELETED FILE: %s" (concat (org-latex-compile-dir) "/framework.pdf"))
     (org-latex-compile file)
     (message "tex->pdf produced: %s" pdf-file)
+    (when (gnus-buffer-exists-p "*Async Shell Command*") ;; NEEDED??????
+      (kill-buffer "*Async Shell Command*"))
     pdf-file
     ))
 
