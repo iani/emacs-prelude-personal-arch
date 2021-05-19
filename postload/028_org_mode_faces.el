@@ -15,7 +15,7 @@
    ;; '(org-level-2 ((t (:family "Courier New" :height 1.1 :weight bold))))
  '(org-level-1 ;; ((t (:weight bold :height 1.7 :family "Source Code Pro")))
    ((t
-     (:family "Linux Libertine" :height 1.5 :weight bold
+     (:family "Linux Libertine" :height 1.3 :weight bold
               ;; :foreground "#DFAF8F"
               :inherit
               (default))))
