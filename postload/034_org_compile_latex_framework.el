@@ -18,11 +18,6 @@
 ;;; PATHS:
 ;;; org-latex-base org-latex-default-template
 ;;; org-latex-exports-dir org-latex-templates-dir org-latex-compile-dir
-;;;
-
-(defcustom pdflatexp ()
-  "If true, use pdflatex, else use xelatex"
-  :group 'org-latex-compile)
 
 (defcustom org-latex-base (file-truename "~/latex-exports/")
   "Directory where latex template and export files are stored.
@@ -100,6 +95,10 @@ If not defined, return the default provided as optional argument."
 If filep is true export the entire file, else only the current section."
   (interactive "P")
   (let* ((subtreep (not filep))
+         (compiler-type (cadr (read-multiple-choice
+          "Use which pdf compiler?"
+          '((?p "pdflatex" "pdflatex (for english conference templates)")
+            (?x "xelatex" "xelatex (for multilingual texts)")))))
          (template-path (org-latex-selected-template-path subtreep))
          ;; path of source framework file to compile to pdf
          (compile-path (concat (org-latex-compile-dir) "/framework.tex"))
@@ -109,6 +108,7 @@ If filep is true export the entire file, else only the current section."
                         'latex     subtreep      nil          t         nil
                         )))
     ;; prepare directories and files for compiling
+    (message "you selected %s compiler" compiler-type)
     (delete-directory (org-latex-compile-dir) t)
     (copy-directory template-path (org-latex-compile-dir))
     (delete-file (concat (org-latex-compile-dir) "/framework.pdf"))
@@ -120,7 +120,7 @@ If filep is true export the entire file, else only the current section."
       (write-file (concat (org-latex-compile-dir) "/body.tex")))
     ;; compile framework using content from exported body
     (setq pdf-file                                       ;; t: do not open!
-          (latex-compile-file-with-latexmk pdflatexp compile-path))
+          (latex-compile-file-with-latexmk compiler-type compile-path))
     (let ((final-copy-path
            (concat (org-latex-exports-dir)
                    ;; input filename from user, providing default
@@ -139,7 +139,7 @@ If filep is true export the entire file, else only the current section."
       (open-pdf-file final-copy-path)
       )))
 
-(defun latex-compile-file-with-latexmk (&optional pdflatexoption filename)
+(defun latex-compile-file-with-latexmk (&optional compiler filename)
   "Compile tex file using latexmk.
   If PDFLATEXP then use pdflatex instead of xelatex.
   Open resulting pdf file with default macos open method."
@@ -154,9 +154,14 @@ If filep is true export the entire file, else only the current section."
                      (file-name-sans-extension file)
                      ".pdf"))
           (org-latex-pdf-process
-           (if pdflatexoption
-               '("latexmk -shell-escape -g -pdf -pdflatex=\"pdflatex\" -outdir=%o %f")
-             '("latexmk -shell-escape -g -pdf -pdflatex=\"xelatex\" -outdir=%o %f")))
+           (list
+            (format
+             "latexmk -shell-escape -g -pdf -pdflatex=\"%s\" -outdir=%%o %%f"
+             compiler))
+           ;; (if pdflatexoption
+           ;;     '("latexmk -shell-escape -g -pdf -pdflatex=\"pdflatex\" -outdir=%o %f")
+           ;;   '("latexmk -shell-escape -g -pdf -pdflatex=\"xelatex\" -outdir=%o %f"))
+           )
          )
     (message "file is: %s" file)
     (message "latex compile command is:\n %s" org-latex-pdf-process)
@@ -209,31 +214,36 @@ Only works in linux with epdfview installed."
           result
         (file-name-directory result))))))
 
-  (defun org-latex-set-buffer-template ()
-    "Set value of LATEX_HEADER_PATH property globally in current buffer."
-    (interactive)
-    (let ((path (org-latex-read-template-path)))
-      (save-excursion
-        (org-with-wide-buffer
-         (goto-char (point-min))
-         (let ((new-line "")
-               (here (re-search-forward
-                      (concat "^"
-                              (regexp-quote
-                               (concat "#+"
-                                       (symbol-name org-latex-template-property)
-                                       ":"))
-                              " ?") nil t)))
-           (cond
-            (here
-             (goto-char here)
-             (beginning-of-line)
-             (kill-line))
-            (t
-             (setq new-line "\n")
-             (goto-char (point-min))))
-           (insert (symbol-name org-latex-template-property) path new-line))))
-      (message "You selected: \n%s" path)))
+(defun org-latex-set-buffer-template ()
+  "Set value of LATEX_HEADER_PATH property globally in current buffer."
+  (interactive)
+  (let ((path (org-latex-read-template-path)))
+    (save-excursion
+      (org-with-wide-buffer
+       (goto-char (point-min))
+       (let ((new-line "")
+             (here (re-search-forward
+                    (concat "^"
+                            (regexp-quote
+                             (concat "#+"
+                                     (symbol-name org-latex-template-property)
+                                     ":"))
+                            " ?") nil t)))
+         (cond
+          (here
+           (goto-char here)
+           (beginning-of-line)
+           (kill-line))
+          (t
+           (setq new-line "\n")
+           (goto-char (point-min))))
+         (insert
+          "#+"
+          (symbol-name org-latex-template-property)
+          ": "
+          path
+          new-line))))
+    (message "You selected: \n%s" path)))
 
 (defun org-latex-post-subtree-template-path ()
   "Post the path of the latex template file for current subtree."
@@ -255,16 +265,6 @@ Only works in linux with epdfview installed."
   (interactive)
   (find-file (concat (org-latex-selected-template-path t) "/framework.tex")))
 
-(defun org-use-xelatex ()
-  "Use xelatex to compile org to pdf."
-  (interactive)
-  (setq pdflatexp nil))
-
-(defun org-use-pdflatex ()
-  "Use pdflatex to compile org to pdf."
-  (interactive)
-  (setq pdflatexp t))
-
 (defun compile-subtree-to-pdf ()
   "Compile subtree to pdf."
   (interactive)
@@ -283,8 +283,6 @@ Only works in linux with epdfview installed."
   "latex hydra"
   ("l" compile-subtree-to-pdf "subtree->pdf")
   ("L" compile-buffer-to-pdf "buffer->pdf")
-  ("p" org-use-pdflatex "use pdflatex")
-  ("x" org-use-xelatex "use xelatex")
   ("t" org-latex-set-buffer-template "set buffer template")
   ("T" org-latex-set-subtree-template "set subtree template")
   ("/" org-latex-post-file-template-path "post file template path")
