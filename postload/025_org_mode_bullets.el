@@ -7,7 +7,7 @@
 
 ;;; use bullets currently displayable by emacson macos 10.13 and arch linux 18:
 (setq org-bullets-bullet-list
-      '("⦿" "✸" "▷" "►" "✧" "✦" "○" "●" "⚙" "✿" "◇" "◆" "★" "◻" "◼"  "◎" "◉" "⧁" "□" "■" "⟾" "⟶" "⤇" "⥤"
+      '("⦿" "✸" "►" "▷" "✧" "✦" "●" "○" "⚙" "✿" "◇" "◆" "★" "◻" "◼"  "◎" "◉" "⧁" "□" "■" "⟾" "⟶" "⤇" "⥤"
         ))
 
 ;; add this macro for inserting item bullets ( 5 Feb 2021 22:21)

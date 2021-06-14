@@ -97,8 +97,8 @@ If filep is true export the entire file, else only the current section."
   (let* ((subtreep (not filep))
          (compiler-type (cadr (read-multiple-choice
           "Use which pdf compiler?"
-          '((?p "pdflatex" "pdflatex (for english conference templates)")
-            (?x "xelatex" "xelatex (for multilingual texts)")))))
+          '((?p "pdflatex" "for english conference templates")
+            (?x "xelatex" "for multilingual texts")))))
          (template-path (org-latex-selected-template-path subtreep))
          ;; path of source framework file to compile to pdf
          (compile-path (concat (org-latex-compile-dir) "/framework.tex"))
@@ -281,8 +281,8 @@ Only works in linux with epdfview installed."
 
 (defhydra hydra-latex (:color red :columns 2)
   "latex hydra"
-  ("l" compile-subtree-to-pdf "subtree->pdf")
-  ("L" compile-buffer-to-pdf "buffer->pdf")
+  ("l" compile-buffer-to-pdf "buffer->pdf")
+  ("L" compile-subtree-to-pdf "subtree->pdf")
   ("t" org-latex-set-buffer-template "set buffer template")
   ("T" org-latex-set-subtree-template "set subtree template")
   ("/" org-latex-post-file-template-path "post file template path")
