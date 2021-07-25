@@ -28,7 +28,7 @@ Both the source files and the resulting pdf files are stored in this directory."
   "Name of the org property that stores the latex template name."
   :group 'org-latex-compile)
 
-(defcustom org-latex-default-template "default-template"
+(defcustom org-latex-default-template "."
   "Default template directory name."
   :group 'org-latex-compile)
 
@@ -45,9 +45,15 @@ Both the source files and the resulting pdf files are stored in this directory."
 This is created by copying the selected template directory."
   (concat org-latex-base "compile_framework"))
 
+;;; !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 (defun org-latex-selected-template-path (&optional subtreep)
-  "Get path of selected template."
-  (concat (org-latex-templates-dir) (org-latex-selected-template subtreep)))
+  "Get path of selected template.
+If selected template is '.', then return path of folder containing current file.
+Else concatenate global latex templates dir path with selected template."
+  (let ((template-name (org-latex-selected-template subtreep)))
+    (if (equal template-name ".")
+        (directory-file-name (file-name-directory (buffer-file-name)))
+      (concat (org-latex-templates-dir) template-name))))
 
 (defun org-latex-selected-template (&optional subtreep)
   "Get name of selected template.
@@ -154,18 +160,24 @@ If filep is true export the entire file, else only the current section."
                      (file-name-sans-extension file)
                      ".pdf"))
           (org-latex-pdf-process
+           ;; see https://orgmode.org/worg/exporters/anno-bib-template-worg.html
            (list
+            ;; trying bibtex here
+            (format
+              "latexmk -shell-escape -g -pdf -pdflatex=\"%s\" -outdir=%%o %%f"
+              compiler)
+            "biber %b" ;; "biblatex %b" ;; "biber %b"
             (format
              "latexmk -shell-escape -g -pdf -pdflatex=\"%s\" -outdir=%%o %%f"
-             compiler))
-           ;; (if pdflatexoption
-           ;;     '("latexmk -shell-escape -g -pdf -pdflatex=\"pdflatex\" -outdir=%o %f")
-           ;;   '("latexmk -shell-escape -g -pdf -pdflatex=\"xelatex\" -outdir=%o %f"))
+             compiler)
+            (format
+             "latexmk -shell-escape -g -pdf -pdflatex=\"%s\" -outdir=%%o %%f"
+             compiler)
+            )
            )
          )
     (message "file is: %s" file)
     (message "latex compile command is:\n %s" org-latex-pdf-process)
-    ;; why delete .bbl file?
     (message "deleting file: %s" (concat (org-latex-compile-dir) "/framework.pdf"))
     (delete-file (concat (org-latex-compile-dir) "framework.pdf"))
     (message "DELETED FILE: %s" (concat (org-latex-compile-dir) "/framework.pdf"))

@@ -1,6 +1,6 @@
 (setq org-default-notes-file
       (concat (file-truename "~/Documents/000Workfiles/PROJECTS_CURRENT/")
-              "PROJECT_REVIEW_AND_CAPTURE.org"))
+              "000GlobalNotes210514ff.org"))
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
@@ -9,7 +9,7 @@
          "* %?\nEntered on %U\n  %i\n  %a")))
 
 (defcustom org-refile-targets
-  '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+  '(("~/Documents/000Workfiles/PROJECTS_CURRENT/000GlobalNotes210514ff.org"
      :maxlevel . 1))
   "File used for project notes.
 Used by org-refile for jumping to project topics." )
@@ -18,21 +18,21 @@ Used by org-refile for jumping to project topics." )
   "Set maxlevel 1"
   (interactive)
   (setq org-refile-targets
-        '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+        '(("~/Documents/000Workfiles/PROJECTS_CURRENT/000GlobalNotes210514ff.org"
            :maxlevel . 1))))
 
 (defun org-refile-set-target-level-2 ()
   "Set maxlevel 2"
   (interactive)
   (setq org-refile-targets
-        '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+        '(("~/Documents/000Workfiles/PROJECTS_CURRENT/000GlobalNotes210514ff.org"
            :maxlevel . 2))))
 
 (defun org-refile-set-target-level-3 ()
   "Set maxlevel 3"
   (interactive)
   (setq org-refile-targets
-        '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+        '(("~/Documents/000Workfiles/PROJECTS_CURRENT/000GlobalNotes210514ff.org"
            :maxlevel . 3))))
 
 (defun org-set-agenda-files-global ()
@@ -45,7 +45,7 @@ Used by org-refile for jumping to project topics." )
 (defun org-set-agenda-files-project ()
   "Set org-agenda-files to project summaries."
   (interactive)
-  (setq org-agenda-files '("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org")))
+  (setq org-agenda-files '("~/Documents/000Workfiles/PROJECTS_CURRENT/000GlobalNotes210514ff.org")))
 
 (global-set-key (kbd "C-S-c C-S-c") 'org-capture)
 (global-set-key (kbd "C-S-c C-S-r") 'org-capture-goto-last-stored)
@@ -54,7 +54,7 @@ Used by org-refile for jumping to project topics." )
   "Call org-refile with argument to jump to target."
   (interactive)
   (let ((org-refile-targets
-         '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+         '(("~/Documents/000Workfiles/PROJECTS_CURRENT/000GlobalNotes210514ff.org"
             :maxlevel . 2))))
     (funcall-interactively 'org-refile '(4))))
 
@@ -69,7 +69,7 @@ Used by org-refile for jumping to project topics." )
   "Open project file."
   (interactive)
   (let ((org-refile-targets
-         '(("~/Documents/000Workfiles/PROJECTS_CURRENT/PROJECT_SUMMARIES.org"
+         '(("~/Documents/000Workfiles/PROJECTS_CURRENT/000GlobalNotes210514ff.org"
             :maxlevel . 2))))
     (find-file (caar org-refile-targets))))
 
@@ -92,3 +92,4 @@ Used by org-refile for jumping to project topics." )
   )
 
 (global-set-key (kbd "C-M-S-r") 'hydra-org-refile/body)
+(global-set-key (kbd "C-c C-u") 'org-refile-jump-to-target)

@@ -1,0 +1,4 @@
+An alternative implementation of scel eval functions:
+
+https://github.com/ahihi/scel
+
